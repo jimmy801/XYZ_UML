@@ -28,6 +28,7 @@ public class UML extends JFrame {
 
     private void initCanvas(){
         canvasPanel = Canvas.getInstance(); // In order to paint in same Panel
+        canvasPanel.setDoubleBuffered(true);
         this.getContentPane().add(BorderLayout.CENTER, canvasPanel);
     }
 

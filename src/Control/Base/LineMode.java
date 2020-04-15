@@ -1,18 +1,11 @@
 package Control.Base;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Point;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import Model.Base.BasicObject;
-import Model.Base.Line;
 import Model.Base.Port;
-import Model.Lines.*;
-import Model.Objects.Class;
-import Model.Objects.UseCase;
-import Utils.MODE;
 
 public class LineMode extends Mode {
 	protected Point press;
@@ -21,75 +14,86 @@ public class LineMode extends Mode {
 	protected Port releaseP;
 	protected BasicObject pressObj;
 	protected BasicObject releaseObj;
-	
-	public LineMode(){
+
+	public LineMode() {
 		press = new Point();
 		release = new Point();
+		initPtr();
 	}
-	
+
 	@Override
 	public void mousePressed(MouseEvent e) {
 		super.mousePressed(e);
 		press.setLocation(e.getPoint());
+		for (Port p : canvas.ports) {
+			if (p.contains(press)) {
+				pressObj = p.getParent();
+				pressP = p;
+			}
+		}
 	}
-	
+
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		super.mouseReleased(e);
 		release.setLocation(e.getPoint());
-		for(Port p: canvas.ports){
-            p.setVisible(p.getParent().isSelected());
-        }
+		for (Port p : canvas.ports) {
+			p.setVisible(p.getParent().isSelected());
+		}
 	}
 	
-	@Override
-	public void mouseMoved(MouseEvent e) {
-		super.mouseDragged(e);
-		for(Port p: canvas.ports){
-			if(p.contains(e.getPoint())) {
-				p.setColor(Color.GREEN);
-				p.setVisible(true);
-			}
-			else {
-				p.setColor(Color.BLACK);
-				p.setVisible(p.getParent().isSelected());
-			}
-        }
-		canvas.repaint();
-	}
-	
-	@Override
-	public void mouseDragged(MouseEvent e) {
-		super.mouseDragged(e);
-		for(Port p: canvas.ports){
-            p.setVisible(true);
-            if(p.contains(e.getPoint()))
-				p.setColor(Color.GREEN);
-            else
-            	p.setColor(Color.BLACK);
-        }
-        canvas.repaint();
-	}
-	
-	protected boolean connectLine() {
+	public void initPtr() {
 		pressObj = null;
 		pressP = null;
 		releaseObj = null;
 		releaseP = null;
-        for(Port p: canvas.ports){
-            if(p.contains(press)){
-                pressObj = p.getParent();
-                pressP = p;
-            }else if(p.contains(release)){
-                releaseObj = p.getParent();
-                releaseP = p;
-            }
-        }
+	}
+	
+	public void changePortColor(Point pt) {
+		changePortColor(pt, false);
+	}
 
-        if(pressP != null && releaseP != null && pressP != releaseP) {
-        	System.out.println("Connect");
-        	return true;
-        }
-        return pressP != null && releaseP != null && pressP != releaseP;
-    }
+	public void changePortColor(Point pt, boolean drag) {
+		for (Port p : canvas.ports) {
+			if (p.contains(pt)) {
+				p.setColor(p.getParent() != pressObj ? Color.GREEN : Color.RED);
+				p.setVisible(true);
+			} else {
+				p.setColor(Color.BLACK);
+				p.setVisible(p.getParent().isSelected() || (drag && pressObj != null));
+			}
+		}
+		canvas.repaint();
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent e) {
+		super.mouseMoved(e);
+		changePortColor(e.getPoint());
+	}
+
+	@Override
+	public void mouseDragged(MouseEvent e) {
+		super.mouseDragged(e);
+		changePortColor(e.getPoint(), true);
+	}
+
+	protected boolean connectLine() {
+		initPtr();
+		for (Port p : canvas.ports) {
+			if (p.contains(press)) {
+				pressObj = p.getParent();
+				pressP = p;
+			} else if (p.contains(release)) {
+				releaseObj = p.getParent();
+				releaseP = p;
+			}
+		}
+
+		/*if (pressObj != releaseObj && pressObj != null && releaseObj != null) {
+			System.out.println("Connect");
+			return true;
+		}*/
+		return pressObj != releaseObj && pressObj != null && releaseObj != null;
+	}
 }
