@@ -7,6 +7,13 @@ import java.awt.event.MouseMotionListener;
 import View.Canvas;
 import View.MenuBar;
 
+/**
+ * Base of all controls, listen mouse events
+ * 
+ * @author Jimmy801
+ *
+ * @see {@link MouseListener}, {@link MouseMotionListener}
+ */
 public class Mode implements MouseListener, MouseMotionListener {
 
 	protected Canvas canvas = Canvas.getInstance();

@@ -11,8 +11,17 @@ import java.util.Vector;
 
 import Model.Base.BasicObject;
 
+/**
+ * Group object component
+ * 
+ * @author Jimmy801
+ *
+ * @see {@link Model.Base.BasicObject}
+ */
 public class Group extends BasicObject {
 	private Vector<BasicObject> children;
+	private Point pt;
+	private Dimension dim;
 
 	public Group() {
 		this(new Point(), new Dimension());

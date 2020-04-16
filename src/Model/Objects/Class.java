@@ -9,6 +9,13 @@ import java.awt.Point;
 
 import Model.Base.BasicObject;
 
+/**
+ * Class object component
+ * 
+ * @author Jimmy801
+ *
+ * @see {@link Model.Base.BasicObject}
+ */
 public class Class extends BasicObject {
 	public Class(Point p, String str) {
 		super(p, new Dimension(100, 90), str);
@@ -32,7 +39,7 @@ public class Class extends BasicObject {
 		Dimension textSize = getTextSize();
 		int textW = textSize.width, textH = textSize.height;
 		g.setColor(Color.BLACK);
-		g.drawString(name, getWidth() / 2 - textW / 2, getHeight() / 3 - textH / 2);
+		g.drawString(this.getName(), getWidth() / 2 - textW / 2, getHeight() / 3 - textH / 2);
 	}
 
 	@Override

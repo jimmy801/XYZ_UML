@@ -7,6 +7,13 @@ import java.awt.Point;
 
 import Model.Base.BasicObject;
 
+/**
+ * Use Case object component
+ * 
+ * @author Jimmy801
+ *
+ * @see {@link Model.Base.BasicObject}
+ */
 public class UseCase extends BasicObject {
 	public UseCase(Point p, String str) {
 		super(p, new Dimension(150, 75), str);
@@ -21,11 +28,11 @@ public class UseCase extends BasicObject {
 		super.paintComponent(g);
 		g.setColor(Color.LIGHT_GRAY);
 		g.fillOval(0, 0, getWidth(), getHeight());
-		
+
 		Dimension textSize = getTextSize();
 		int textW = textSize.width, textH = textSize.height;
 		g.setColor(Color.BLACK);
-		g.drawString(name, (getWidth() - textW) / 2, (getHeight() + textH) / 2);
+		g.drawString(this.getName(), (getWidth() - textW) / 2, (getHeight() + textH) / 2);
 	}
 
 	@Override

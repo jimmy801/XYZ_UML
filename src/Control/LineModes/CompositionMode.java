@@ -6,6 +6,13 @@ import Control.Base.LineMode;
 import Model.Base.Line;
 import Model.Lines.GeneralizationLine;
 
+/**
+ * Composition line control
+ * 
+ * @author Jimmy801
+ *
+ * @see {@link Control.Base.LineMode}
+ */
 public class CompositionMode extends LineMode {
 
 	public CompositionMode() {
@@ -25,6 +32,6 @@ public class CompositionMode extends LineMode {
 		}
 		initPtr();
 		changePortColor(e.getPoint());
-		//canvas.repaint();
+		canvas.repaint();
 	}
 }

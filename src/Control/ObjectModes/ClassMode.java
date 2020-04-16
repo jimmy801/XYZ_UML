@@ -7,6 +7,13 @@ import Model.Base.BasicObject;
 import Model.Base.Port;
 import Model.Objects.Class;
 
+/**
+ * Class Object control
+ * 
+ * @author Jimmy801
+ *
+ * @see {@link Control.Base.ObjectMode}
+ */
 public class ClassMode extends ObjectMode {
 	public ClassMode() {
 		super();

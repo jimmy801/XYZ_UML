@@ -7,6 +7,13 @@ import java.awt.event.MouseEvent;
 import Model.Base.BasicObject;
 import Model.Base.Port;
 
+/**
+ * Base of all Line Controls
+ * 
+ * @author Jimmy801
+ * 
+ * @see {@link Mode}
+ */
 public class LineMode extends Mode {
 	protected Point press;
 	protected Point release;
@@ -41,14 +48,14 @@ public class LineMode extends Mode {
 			p.setVisible(p.getParent().isSelected());
 		}
 	}
-	
+
 	public void initPtr() {
 		pressObj = null;
 		pressP = null;
 		releaseObj = null;
 		releaseP = null;
 	}
-	
+
 	public void changePortColor(Point pt) {
 		changePortColor(pt, false);
 	}
@@ -63,19 +70,20 @@ public class LineMode extends Mode {
 				p.setVisible(p.getParent().isSelected() || (drag && pressObj != null));
 			}
 		}
-		canvas.repaint();
 	}
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
 		super.mouseMoved(e);
 		changePortColor(e.getPoint());
+		canvas.repaint();
 	}
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
 		super.mouseDragged(e);
 		changePortColor(e.getPoint(), true);
+		canvas.repaint();
 	}
 
 	protected boolean connectLine() {
@@ -90,10 +98,6 @@ public class LineMode extends Mode {
 			}
 		}
 
-		/*if (pressObj != releaseObj && pressObj != null && releaseObj != null) {
-			System.out.println("Connect");
-			return true;
-		}*/
 		return pressObj != releaseObj && pressObj != null && releaseObj != null;
 	}
 }

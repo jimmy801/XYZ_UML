@@ -7,8 +7,14 @@ import Model.Base.BasicObject;
 import Model.Base.Port;
 import Model.Objects.UseCase;
 
+/**
+ * Use Case object control
+ * 
+ * @author Jimmy801
+ *
+ * @see {@link Control.Base.ObjectMode}
+ */
 public class UseCaseMode extends ObjectMode {
-
 	public UseCaseMode() {
 		super();
 	}

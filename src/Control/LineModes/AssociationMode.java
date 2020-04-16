@@ -6,6 +6,13 @@ import Control.Base.LineMode;
 import Model.Base.Line;
 import Model.Lines.AssociationLine;
 
+/**
+ * Association line control
+ * 
+ * @author Jimmy801
+ *
+ * @see {@link Control.Base.LineMode}
+ */
 public class AssociationMode extends LineMode {
 	public AssociationMode() {
 		super();
@@ -24,6 +31,6 @@ public class AssociationMode extends LineMode {
 		}
 		initPtr();
 		changePortColor(e.getPoint());
-//		canvas.repaint();
+		canvas.repaint();
 	}
 }

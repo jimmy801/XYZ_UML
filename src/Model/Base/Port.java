@@ -7,8 +7,14 @@ import java.util.Vector;
 
 import javax.swing.JComponent;
 
+/**
+ * Port component
+ * 
+ * @author Jimmy801
+ *
+ * @see {@link JComponent}
+ */
 public class Port extends JComponent {
-	public Point R;
 	public Vector<Line> lines;
 	public static int width = 5;
 	public static int height = 5;
@@ -22,27 +28,14 @@ public class Port extends JComponent {
 	public Port(int x, int y, BasicObject parent) {
 		this.parent = parent;
 		lines = new Vector<Line>();
-		setVisible(false);
-		setLocation(x, y);
 		color = Color.BLACK;
+		this.setBounds(x, y, width, height);
 	}
 
 	@Override
 	public boolean contains(Point p) {
-		return (p.x > R.x) && (p.y > R.y) && (p.x < R.x + width) && (p.y < R.y + height);
-	}
-
-	@Override
-	public void setLocation(Point p) {
-		setLocation(p.x, p.y);
-	}
-
-	@Override
-	public void setLocation(int x, int y) {
-		super.setLocation(x, y);
-		R = new Point(x, y);
-		setBounds(R.x, R.y, width, height);
-		repaint();
+		return (p.x > this.getX()) && (p.y > this.getY()) 
+				&& (p.x < this.getX() + this.getWidth()) && (p.y < this.getY() + this.getHeight());
 	}
 
 	@Override
@@ -54,7 +47,7 @@ public class Port extends JComponent {
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		g.setColor(color);
-		g.fillRect(0, 0, width, height);
+		g.fillRect(0, 0, this.getWidth(), this.getHeight());
 	}
 
 	public void addLine(Line line) {

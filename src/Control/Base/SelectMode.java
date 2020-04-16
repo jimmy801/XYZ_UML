@@ -2,17 +2,20 @@ package Control.Base;
 
 import java.awt.Point;
 import java.awt.event.MouseEvent;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import Model.Base.BasicObject;
-import Model.Base.Line;
-import Model.Base.Port;
 import Model.Base.SelectRectangle;
-import Model.Objects.Group;
 
+/**
+ * Select Control, control select event
+ * 
+ * @author Jimmy801
+ *
+ * @see {@link Mode}
+ */
 public class SelectMode extends Mode {
 	private Point press;
 	private Point release;
@@ -35,28 +38,33 @@ public class SelectMode extends Mode {
 		boolean inSelect = false;
 		for (Entry<BasicObject, Point> sel : selectedObjs.entrySet()) {
 			BasicObject com = sel.getKey();
-			if (!canvas.objs.contains(com) || !com.isSelected())
+			if (!canvas.objs.contains(com) || !com.isSelected()) {
 				break;
-			if (com.contains(e.getPoint()))
+			}
+			if (com.contains(e.getPoint())) {
 				inSelect = true;
+			}
 			selectedObjs.put(com, new Point(com.getX() - e.getX(), com.getY() - e.getY()));
 		}
-		if (!inSelect)
+		if (!inSelect) {
 			selectedObjs.clear();
+		}
 		for (BasicObject obj : canvas.objs) {
 			if (obj.contains(press) && !inSelect && !pressOnObj) {
 				pressOnObj = true;
 				obj.setSelected(true);
 				selectedObjs.put(obj, new Point(obj.getX() - e.getX(), obj.getY() - e.getY()));
-			} else
+			} else {
 				obj.setSelected(selectedObjs.containsKey(obj));
+			}
 		}
 		canvas.moveToFront();
 		if (!pressOnObj && !inSelect) {
 			sr.setLocation(e.getPoint());
 			canvas.add(sr, 0);
-		} else
+		} else {
 			pressOnObj = true;
+		}
 	}
 
 	@Override
@@ -74,7 +82,8 @@ public class SelectMode extends Mode {
 		}
 		menuBar.setMenuItemEnable();
 		pressOnObj = false;
-		sr.dim.setSize(0, 0);
+		sr.setSize(0, 0);
+		canvas.moveToFront();
 		canvas.repaint();
 	}
 
@@ -88,7 +97,7 @@ public class SelectMode extends Mode {
 				com.setLocation(e.getX() + offset.x, e.getY() + offset.y);
 			}
 		} else {
-			sr.dim.setSize(Math.abs(e.getPoint().x - press.x), Math.abs(e.getPoint().y - press.y));
+			sr.setSize(Math.abs(e.getPoint().x - press.x), Math.abs(e.getPoint().y - press.y));
 			sr.setLocation(Math.min(e.getPoint().x, press.x), Math.min(e.getPoint().y, press.y));
 		}
 		canvas.repaint();

@@ -11,6 +11,13 @@ import javax.swing.JPanel;
 
 import Utils.MODE;
 
+/**
+ * Panel of mode buttons
+ * 
+ * @author Jimmy801
+ *
+ * @see {@link JPanel}
+ */
 public class ButtonsPanel extends JPanel {
 	Vector<JButton> btns;
 	private Canvas canvas = Canvas.getInstance();

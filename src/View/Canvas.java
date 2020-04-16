@@ -1,6 +1,7 @@
 package View;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.util.Comparator;
@@ -22,24 +23,76 @@ import Model.Base.Port;
 import Model.Objects.Group;
 import Utils.MODE;
 
+/**
+ * UML canvas
+ * 
+ * @author Jimmy801
+ *
+ * @see {@link JLayeredPane}
+ */
 public class Canvas extends JLayeredPane {
+	/**
+	 * Instance of canvas
+	 */
 	private static Canvas canvasInstance = null;
+	/**
+	 * Current mode of canvas
+	 */
 	public static Mode currentMode = null;
+	/**
+	 * Current mode id
+	 */
 	private int mode;
+	/**
+	 * All modes of canvas
+	 */
 	private static Vector<Mode> modes;
+	/**
+	 * All components of canvas
+	 */
 	public Vector<BasicObject> objs;
+	/**
+	 * All ports of canvas
+	 */
 	public Vector<Port> ports;
+	/**
+	 * All group of canvas
+	 */
 	public Vector<Group> groups;
 
+	/**
+	 * Initialize canvas
+	 */
 	public Canvas() {
 		this.setLayout(null); // make objects wouldn't locate to wrong position.
-		this.setBackground(Color.WHITE);
 		objs = new Vector<BasicObject>();
 		ports = new Vector<Port>();
 		groups = new Vector<Group>();
 		modes = new Vector<Mode>();
+		registerCanvasListener();
+	}
+	
+	/**
+	 * Register non-Modes listeners of canvas
+	 */
+	private void registerCanvasListener() {
+		this.addComponentListener(new ComponentAdapter() {
+			@Override
+			public void componentResized(ComponentEvent e) {
+				// make sure lines of ports can be painted on full canvas
+				for (Port port : canvasInstance.ports) {
+					for (Line line : port.lines) {
+						line.setSize(canvasInstance.getSize());
+					}
+				}
+			}
+		});
 	}
 
+	/**
+	 * Get instance of Canvas
+	 * @return {@link Canvas} CanvasInstance
+	 */
 	public static Canvas getInstance() {
 		if (canvasInstance == null) {
 			canvasInstance = new Canvas();
@@ -48,6 +101,9 @@ public class Canvas extends JLayeredPane {
 		return canvasInstance;
 	}
 
+	/**
+	 * Initial all modes of canvas by {@link Utils.MODE}
+	 */
 	private static void initModes() {
 		for (MODE m : MODE.values()) {
 			switch (m) {
@@ -71,16 +127,7 @@ public class Canvas extends JLayeredPane {
 				break;
 			}
 		}
-		canvasInstance.addComponentListener(new ComponentAdapter() {
-			@Override
-			public void componentResized(ComponentEvent e) {
-				for (Port port : canvasInstance.ports) {
-					for (Line line : port.lines) {
-						line.setSize(canvasInstance.getSize());
-					}
-				}
-			}
-		});
+		
 	}
 
 	@Override
@@ -88,10 +135,18 @@ public class Canvas extends JLayeredPane {
 		return false;
 	}
 
+	/**
+	 * Get id of current mode
+	 * @return current mode id
+	 */
 	public int getMode() {
 		return mode;
 	}
 
+	/**
+	 * Change mode by mode id
+	 * @param mode - change mode id
+	 */
 	public void setMode(int mode) {
 		this.removeMouseListener(currentMode);
 		this.removeMouseMotionListener(currentMode);
@@ -101,88 +156,90 @@ public class Canvas extends JLayeredPane {
 		this.addMouseMotionListener(currentMode);
 	}
 
+	/**
+	 * Get arrays of selected {@link Model.Base.BasicObject} components on canvas
+	 * @return array of selected components
+	 */
 	public BasicObject[] getSelectedObjs() {
 		return objs.stream().filter(e -> e.isSelected()).toArray(BasicObject[]::new);
 	}
 
+	/**
+	 * Get number of selected objects
+	 * @return number of selected objects
+	 * 
+	 * @see {@link #getSelectedObjs}
+	 */
 	public int countObjSelected() {
 		return getSelectedObjs().length;
 	}
 
+	/**
+	 * Get arrays of selected {@link Model.Objects.Group} groups on canvas
+	 * @return array of selected groups
+	 */
 	public Group[] getSelectedGroups() {
 		return groups.stream().filter(e -> e.isSelected()).toArray(Group[]::new);
 	}
-
+	
+	/**
+	 * Get number of selected groups
+	 * @return number of selected groups
+	 * 
+	 * @see {@link #getSelectedGroups}
+	 */
 	public int countGroupSelected() {
 		return getSelectedGroups().length;
 	}
 
-	public void groupObjs() {
-		Group group = new Group(/* objs.stream().filter(e->e.isSelected()).toArray(BasicObject[]::new) */);
-		Iterator<BasicObject> it = objs.iterator();
-		while (it.hasNext()) {
-			BasicObject obj = it.next();
-			if (obj.isSelected()) {
-				group.addChild(getComponentZOrder(obj) <= getComponentZOrder(group) ? 0 : group.getChildren().size(),
-						obj);
-				obj.setSelected(false);
-				it.remove();
-			}
-		}
-		group.getChildren().forEach((el)->System.out.println(el.getName()));
-		objs.add(0, group);
-		groups.add(0, group);
-		this.add(group, 0);
-		moveToFront();
-		this.repaint();
-	}
-
-	public void ungroupObjs() {
-		Iterator<Group> it = groups.iterator();
-		while (it.hasNext()) {
-			Group g = it.next();
-			if (g.isSelected()) {
-				objs.addAll(0, g.getChildren());
-				g.getChildren().forEach((el) -> {
-					el.setSelected(false);
-					el.setParentGroup(null);
-				});
-				g.getChildren().clear();
-				objs.remove(g);
-				this.remove(g);
-				it.remove();
-				break;
-			}
-		}
-		this.repaint();
-	}
-
+	/**
+	 * Set z-order of children(like ports and lines) of a {@link Model.Base.BasicObject} component on canvas
+	 * @param obj - the unset z-order object
+	 */
 	public void setObjZOrder(BasicObject obj) {
+		int OZOrder = getComponentZOrder(obj);
 		for (Port port : obj.ports) {
-			setComponentZOrder(port, getComponentZOrder(obj));
-			for (Line line : port.lines)
-				setComponentZOrder(line, getComponentZOrder(port));
+			setComponentZOrder(port, OZOrder);
+			int PZOrder = getComponentZOrder(port);
+			for (Line line : port.lines) {
+				setComponentZOrder(line, PZOrder);
+			}
 		}
 	}
 
+	/**
+	 * Set z-order of children(like groups and other objects) of a {@link Model.Objects.Group} component on canvas
+	 * 
+	 * Use recursive to check whether parent group is selected.
+	 * 
+	 * @param group - the unset z-order group
+	 * @return group is selected or not
+	 */
 	public boolean setGroupZOrder(Group group) {
 		boolean selected = group.isSelected();
 		if (group.getParentGroup() != null) {
 			selected = setGroupZOrder(group.getParentGroup());
 		}
 		if (selected) {
-			for (BasicObject obj : group.getChildren()) {
-				setComponentZOrder(obj, getComponentZOrder(group));
+			int GZOrder = getComponentZOrder(group);
+			int childrenSize = group.getChildren().size();
+			for (int i = childrenSize - 1; i >= 0; --i) {
+				BasicObject obj = group.getChildren().get(i);
+				setComponentZOrder(obj, GZOrder + i + 1);
 				setObjZOrder(obj);
 			}
-			moveToFront(group);
 		}
 		return selected;
 	}
 
+	/**
+	 * Change z-orders of all selected components on canvas
+	 */
 	public void moveToFront() {
-		boolean unsort = false;
-		for (int i = objs.size() - 1; i >= 0; --i) {
+		boolean unsort = false; // check order of objs need to be sorted. 
+		
+		// move selected objs to front
+		for (int i = objs.size() - 1; i >= 0; --i) { // reverse move to front, make sure z-order wouldn't be reversed
 			BasicObject obj = objs.get(i);
 			if (obj.isSelected()) {
 				unsort = true;
@@ -190,8 +247,12 @@ public class Canvas extends JLayeredPane {
 				setObjZOrder(obj);
 			}
 		}
-		for (int i = groups.size() - 1; i >= 0; i--)
-			setGroupZOrder(groups.get(i));
+		
+		// move selected groups to front
+		for (Group group: groups) {	
+			setGroupZOrder(group);
+		}
+		
 		if (unsort) {
 			objs.sort(new Comparator<BasicObject>() {
 				@Override

@@ -10,10 +10,14 @@ import javax.swing.JComponent;
 
 import Model.Objects.Group;
 
+/**
+ * Base of all object components
+ * 
+ * @author Jimmy801
+ *
+ * @see {@link JComponent}
+ */
 public class BasicObject extends JComponent {
-	protected Point pt;
-	protected Dimension dim;
-	protected String name;
 	public Vector<Port> ports;
 	protected Group parentGroup;
 	protected boolean selected;
@@ -50,50 +54,40 @@ public class BasicObject extends JComponent {
 		this(pt.x, pt.y, dim.width, dim.height, name);
 	}
 
-	public BasicObject(int x, int y, int w, int h, String name) {
-		this.pt = new Point(x, y);
-		this.dim = new Dimension(w, h);
-		this.name = name;
+	public BasicObject(int x, int y, int width, int height, String name) {
 		this.ports = new Vector<>();
-		for (int i = 0; i < PORT_NUM; ++i)
-			this.ports.add(new Port(this.pt, this));
-		setLocation(x, y);
+		for (int i = 0; i < PORT_NUM; ++i) {
+			this.ports.add(new Port(this.getLocation(), this));
+		}
 		parentGroup = null;
+		this.setName(name);
 		this.setSelected(true);
+		this.setBounds(x, y, width, height);
 	}
-
+	
 	@Override
-	public void setLocation(Point p) {
-		this.setLocation(p.x, p.y);
-	}
-
-	@Override
-	public void setLocation(int x, int y) {
-		super.setLocation(x, y);
-		this.pt.setLocation(x, y);
-		setBounds(pt.x, pt.y, dim.width, dim.height);
+	public void setBounds(int x, int y, int width, int height) {
+		super.setBounds(x, y, width, height);
 		setPortLocation();
+	}
+	
+	@Override
+	public void setName(String name) {
+		super.setName(name);
 		repaint();
 	}
 
 	@Override
 	public boolean contains(Point p) {
-		return (p.x > pt.x) && (p.y > pt.y) && (p.x < pt.x + dim.width) && (p.y < pt.y + dim.height);
-	}
-
-	@Override
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	@Override
-	public String getName() {
-		return this.name;
+		return (p.x > this.getX()) && (p.y > this.getY()) && 
+				(p.x < this.getX() + this.getWidth()) && (p.y < this.getY() + this.getHeight());
 	}
 
 	private void setPortLocation() {
 		// left, top, right, bottom
 		int isLeft, isTop;
+		Point pt = this.getLocation();
+		Dimension dim = this.getSize();
 		for (int i = 0; i < PORT_NUM; ++i) {
 			isLeft = i == 0 ? 1 : 0;
 			isTop = i == 1 ? 1 : 0;
@@ -103,30 +97,26 @@ public class BasicObject extends JComponent {
 	}
 
 	public void setPortsVisible(boolean isVisible) {
-		for (Port port : ports)
+		for (Port port : ports) {
 			port.setVisible(isVisible);
+		}
 	}
 
 	public void setPortNumber(int PORT_NUM) {
 		this.PORT_NUM = PORT_NUM;
 		ports.clear();
-		for (int i = 0; i < PORT_NUM; ++i)
-			this.ports.add(new Port(this.pt, this));
+		for (int i = 0; i < PORT_NUM; ++i) {
+			this.ports.add(new Port(this.getLocation(), this));
+		}
 	}
 
 	public void setSelected(boolean selected) {
 		this.selected = selected;
 		setPortsVisible(selected);
-		repaint();
 	}
 
 	public boolean isSelected() {
 		return selected;
-	}
-
-	public void rename(String name) {
-		this.name = name;
-		repaint();
 	}
 
 	public Group getParentGroup() {
@@ -147,7 +137,7 @@ public class BasicObject extends JComponent {
 		Dimension size = new Dimension();
 		Graphics g = this.getGraphics();
 		FontMetrics fm = g.getFontMetrics(g.getFont());
-		size.width = fm.stringWidth(name);
+		size.width = fm.stringWidth(this.getName());
 		size.height = fm.getHeight();
 
 		return size;

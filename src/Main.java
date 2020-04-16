@@ -1,5 +1,11 @@
 import java.awt.EventQueue;
 
+/**
+ * Main Class
+ * 
+ * @author Jimmy801
+ * 
+ */
 public class Main {
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {

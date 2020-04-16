@@ -1,5 +1,11 @@
 package Utils;
 
+/**
+ * enum of modes
+ * 
+ * @author Jimmy801
+ *
+ */
 public enum MODE {
 	SELECT(0, "Select"), ASSOCIATION(1, "Association Line"), GENERALIZATION(2, "Generalization Line"),
 	COMPOSITION(3, "Composition Line"), CLASS(4, "Class"), USECASE(5, "Use Case");

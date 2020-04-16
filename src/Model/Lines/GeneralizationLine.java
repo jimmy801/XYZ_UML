@@ -7,6 +7,13 @@ import java.awt.Point;
 import Model.Base.Line;
 import Model.Base.Port;
 
+/**
+ * Generalization line component
+ * 
+ * @author Jimmy801
+ *
+ * @see {@link Model.Base.Line}
+ */
 public class GeneralizationLine extends Line {
 	public GeneralizationLine(Port src, Port dst) {
 		super(src, dst);
@@ -16,14 +23,16 @@ public class GeneralizationLine extends Line {
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		g.setColor(Color.BLACK);
-		int dis = (int) src.R.distance(dst.R);
-		Point online = new Point(dst.R.x + ARROW_LEN * (src.R.x - dst.R.x) / dis,
-				dst.R.y + ARROW_LEN * (src.R.y - dst.R.y) / dis);
-		Point normal = new Point(-ARROW_LEN * (dst.R.y - src.R.y) / dis, ARROW_LEN * (dst.R.x - src.R.x) / dis);
+		Point srcPt = src.getLocation();
+		Point dstPt = dst.getLocation();
+		int dis = (int) srcPt.distance(dstPt);
+		Point online = new Point(dstPt.x + ARROW_LEN * (srcPt.x - dstPt.x) / dis,
+				dstPt.y + ARROW_LEN * (srcPt.y - dstPt.y) / dis);
+		Point normal = new Point(-ARROW_LEN * (dstPt.y - srcPt.y) / dis, ARROW_LEN * (dstPt.x - srcPt.x) / dis);
 
-		int x[] = { dst.R.x, online.x + normal.x, online.x - normal.x };
-		int y[] = { dst.R.y, online.y + normal.y, online.y - normal.y };
-		g.drawLine(src.R.x, src.R.y, online.x, online.y);
+		int x[] = { dstPt.x, online.x + normal.x, online.x - normal.x };
+		int y[] = { dstPt.y, online.y + normal.y, online.y - normal.y };
+		g.drawLine(srcPt.x, srcPt.y, online.x, online.y);
 		g.drawPolygon(x, y, 3);
 	}
 }

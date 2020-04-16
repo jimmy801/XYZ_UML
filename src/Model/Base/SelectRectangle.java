@@ -10,22 +10,26 @@ import java.awt.Stroke;
 
 import javax.swing.JComponent;
 
+/**
+ * The rectangle of select mode
+ * 
+ * @author Jimmy801
+ *
+ * @see {@link JComponet}
+ */
 public class SelectRectangle extends JComponent {
-	public Point pt;
-	public Dimension dim;
-
 	public SelectRectangle() {
 		this(new Point());
 	}
 
-	public SelectRectangle(Point pt) {
-		this.pt = pt;
-		dim = new Dimension();
+	public SelectRectangle(Point p) {
+		this.setLocation(p);
 	}
 
 	@Override
 	public boolean contains(Point p) {
-		return (p.x > pt.x) && (p.y > pt.y) && (p.x < pt.x + dim.width) && (p.y < pt.y + dim.height);
+		return (p.x > this.getX()) && (p.y > this.getY()) &&
+				(p.x < this.getX() + this.getWidth()) && (p.y < this.getY() + this.getHeight());
 	}
 
 	@Override
@@ -36,19 +40,6 @@ public class SelectRectangle extends JComponent {
 
 		g2.setPaint(Color.GRAY);
 		g2.setStroke(dashed);
-		g2.drawRect(0, 0, dim.width, dim.height);
-	}
-
-	@Override
-	public void setLocation(Point p) {
-		this.setLocation(p.x, p.y);
-	}
-
-	@Override
-	public void setLocation(int x, int y) {
-		super.setLocation(x, y);
-		this.pt.setLocation(x, y);
-		setBounds(x, y, dim.width, dim.height);
-		repaint();
+		g2.drawRect(0, 0, this.getWidth(), this.getHeight());
 	}
 }
