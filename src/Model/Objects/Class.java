@@ -14,15 +14,39 @@ import Model.Base.BasicObject;
  * 
  * @author Jimmy801
  *
- * @see {@link Model.Base.BasicObject}
+ * @see {@link BasicObject}
  */
 public class Class extends BasicObject {
-	public Class(Point p, String str) {
-		super(p, new Dimension(100, 90), str);
+	/**
+	 * Width of this component
+	 */
+	private final static int width = 100;
+	/**
+	 * Height of this component
+	 */
+	private final static int height = 90;
+
+	/**
+	 * Initial by top-left point and name of component.
+	 * 
+	 * @param p    - top-left corner
+	 * @param name - name of component
+	 * 
+	 * @see {@link BasicObject}
+	 */
+	public Class(Point p, String name) {
+		super(p, new Dimension(width, height), name);
 	}
 
-	public Class(String str) {
-		this(new Point(), str);
+	/**
+	 * Initial by name of component.
+	 * 
+	 * @param name - name of component
+	 * 
+	 * @see {@link BasicObject}
+	 */
+	public Class(String name) {
+		this(new Point(), name);
 	}
 
 	@Override
@@ -46,7 +70,7 @@ public class Class extends BasicObject {
 	public void paintBorder(Graphics g) {
 		super.paintBorder(g);
 		Graphics2D g2d = (Graphics2D) g;
-		g2d.setColor(Color.BLUE);
+		g2d.setColor(Color.MAGENTA);
 		g2d.setStroke(new BasicStroke(2));
 		g2d.drawRect(0, 0, getWidth(), getHeight());
 	}

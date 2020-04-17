@@ -16,33 +16,53 @@ import Model.Base.BasicObject;
  * 
  * @author Jimmy801
  *
- * @see {@link Model.Base.BasicObject}
+ * @see {@link BasicObject}
  */
 public class Group extends BasicObject {
+	/**
+	 * Children of this group
+	 */
 	private Vector<BasicObject> children;
-	private Point pt;
+	/**
+	 * Top-left corner of this component
+	 */
+	private Point p;
+	/**
+	 * Dimension of this component
+	 */
 	private Dimension dim;
 
 	public Group() {
 		this(new Point(), new Dimension());
 	}
 
-	public Group(Point pt, Dimension dim) {
-		this.pt = pt;
+	/**
+	 * Initial by top-left point, width, height, and name of component.
+	 * 
+	 * @param p   - top-left corner point of this component
+	 * @param dim - dimension of this component
+	 */
+	public Group(Point p, Dimension dim) {
+		this.p = p;
 		this.dim = dim;
-		this.parentGroup = null;
 		children = new Vector<>();
 		this.ports = new Vector<>();
 		setPortNumber(0);
 		this.setSelected(true);
 	}
 
+	/**
+	 * Initial by children of this group
+	 * 
+	 * @param components - array of children
+	 * 
+	 * @see {@link BasicObject}
+	 */
 	public Group(BasicObject... components) {
-		pt = new Point(components[0].getLocation());
+		p = new Point(components[0].getLocation());
 		dim = new Dimension(components[0].getSize());
 		this.ports = new Vector<>();
 		setPortNumber(0);
-		this.parentGroup = null;
 		children = new Vector<>();
 		addAll(components);
 		this.setSelected(true);
@@ -55,11 +75,11 @@ public class Group extends BasicObject {
 
 	@Override
 	public void setLocation(int x, int y) {
-		int Xoffset = x - pt.x;
-		int Yoffset = y - pt.y;
+		int Xoffset = x - p.x;
+		int Yoffset = y - p.y;
 		for (BasicObject com : children)
 			com.setLocation(com.getX() + Xoffset, com.getY() + Yoffset);
-		this.pt = new Point(x, y);
+		this.p = new Point(x, y);
 		setBounds(x, y, dim.width, dim.height);
 		repaint();
 	}
@@ -69,45 +89,77 @@ public class Group extends BasicObject {
 		super.paintBorder(g);
 		Graphics2D g2d = (Graphics2D) g;
 		Stroke dashed = new BasicStroke(3, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[] { 9 }, 0);
-		g2d.setColor(selected ? Color.RED : Color.BLUE);
+		g2d.setColor(selected ? Color.GREEN : Color.BLUE);
 		g2d.setStroke(dashed);
 		g2d.drawRect(0, 0, this.getWidth(), this.getHeight());
 	}
 
+	/**
+	 * Add children to this group
+	 * 
+	 * @param objs - array new children
+	 * 
+	 * @see {@link BasicObject}
+	 */
 	public void addAll(BasicObject... objs) {
 		for (BasicObject obj : objs)
 			addChild(obj);
 	}
 
+	/**
+	 * Add children to this group
+	 * 
+	 * @param objs - {@link Vector} array of new children
+	 * 
+	 * @see {@link BasicObject}
+	 */
 	public void addAll(Vector<BasicObject> objs) {
 		this.addAll(objs.toArray(new BasicObject[0]));
 	}
 
+	/**
+	 * Get children of this group
+	 * 
+	 * @return children of this group
+	 * 
+	 * @see {@link BasicObject}
+	 */
 	public Vector<BasicObject> getChildren() {
 		return this.children;
 	}
 
+	/**
+	 * Add a child to this group
+	 * 
+	 * @param idx - add child position
+	 * @param c   - child component
+	 */
 	public void addChild(int idx, BasicObject c) {
-		int cLeft = c.getX();
-		int cTop = c.getY();
-		int cRight = cLeft + c.getWidth();
-		int cBottom = cTop + c.getHeight();
-		int right = pt.x + dim.width;
-		int bottom = children.isEmpty() ? 0 : pt.y + dim.height;
+		int cLeft = c.getX(); // left position of added child
+		int cTop = c.getY(); // top position of added child
+		int cRight = cLeft + c.getWidth(); // right position of added child
+		int cBottom = cTop + c.getHeight(); // bottom position of added child
+		int right = p.x + dim.width; // group new right
+		int bottom = children.isEmpty() ? 0 : p.y + dim.height; // group new bottom
 		if (children.isEmpty()) {
-			pt.x = cLeft;
-			pt.y = cTop;
+			p.x = cLeft;
+			p.y = cTop;
 		} else {
-			pt.x = cLeft < pt.x ? cLeft : pt.x;
-			pt.y = cTop < pt.y ? cTop : pt.y;
+			p.x = cLeft < p.x ? cLeft : p.x;
+			p.y = cTop < p.y ? cTop : p.y;
 		}
-		dim.height = (cBottom > bottom ? cBottom : bottom) - pt.y;
-		dim.width = (cRight > right ? cRight : right) - pt.x;
+		dim.height = (cBottom > bottom ? cBottom : bottom) - p.y;
+		dim.width = (cRight > right ? cRight : right) - p.x;
 		children.add(idx, c);
-		c.setParentGroup(this);
-		setLocation(pt);
+		setLocation(p);
 	}
 
+	/**
+	 * Add a child to this group<br>
+	 * Default add to end.
+	 * 
+	 * @param c - child component
+	 */
 	public void addChild(BasicObject c) {
 		this.addChild(children.size(), c);
 	}

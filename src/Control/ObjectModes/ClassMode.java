@@ -12,7 +12,7 @@ import Model.Objects.Class;
  * 
  * @author Jimmy801
  *
- * @see {@link Control.Base.ObjectMode}
+ * @see {@link ObjectMode}
  */
 public class ClassMode extends ObjectMode {
 	public ClassMode() {

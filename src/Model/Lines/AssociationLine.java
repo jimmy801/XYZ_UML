@@ -12,9 +12,17 @@ import Model.Base.Port;
  * 
  * @author Jimmy801
  *
- * @see {@link Model.Base.Line}
+ * @see {@link Line}
  */
 public class AssociationLine extends Line {
+	/**
+	 * Initialize by source port and destination port
+	 * 
+	 * @param src - source port
+	 * @param dst - destination port
+	 * 
+	 * @see {@link Line}
+	 */
 	public AssociationLine(Port src, Port dst) {
 		super(src, dst);
 	}

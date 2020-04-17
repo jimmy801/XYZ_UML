@@ -11,7 +11,7 @@ import Model.Lines.CompositionLine;
  * 
  * @author Jimmy801
  *
- * @see {@link Control.Base.LineMode}
+ * @see {@link LineMode}
  */
 public class GeneralizationMode extends LineMode {
 
@@ -31,7 +31,7 @@ public class GeneralizationMode extends LineMode {
 			releaseP.addLine(line);
 		}
 		initPtr();
-		changePortColor(e.getPoint());
+		changePortStyle(e.getPoint());
 		canvas.repaint();
 	}
 }

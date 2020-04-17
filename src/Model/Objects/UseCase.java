@@ -12,13 +12,37 @@ import Model.Base.BasicObject;
  * 
  * @author Jimmy801
  *
- * @see {@link Model.Base.BasicObject}
+ * @see {@link BasicObject}
  */
 public class UseCase extends BasicObject {
+	/**
+	 * Width of this component
+	 */
+	private final static int width = 150;
+	/**
+	 * Height of this component
+	 */
+	private final static int height = 75;
+
+	/**
+	 * Initial by top-left point and name of component.
+	 * 
+	 * @param p    - top-left corner
+	 * @param name - name of component
+	 * 
+	 * @see {@link BasicObject}
+	 */
 	public UseCase(Point p, String str) {
-		super(p, new Dimension(150, 75), str);
+		super(p, new Dimension(width, height), str);
 	}
 
+	/**
+	 * Initial by name of component.
+	 * 
+	 * @param name - name of component
+	 * 
+	 * @see {@link BasicObject}
+	 */
 	public UseCase(String str) {
 		this(new Point(), str);
 	}
@@ -38,7 +62,7 @@ public class UseCase extends BasicObject {
 	@Override
 	public void paintBorder(Graphics g) {
 		super.paintBorder(g);
-		g.setColor(Color.BLUE);
+		g.setColor(Color.MAGENTA);
 		g.drawOval(0, 0, getWidth(), getHeight());
 	}
 }

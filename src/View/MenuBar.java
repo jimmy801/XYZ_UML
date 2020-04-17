@@ -2,7 +2,6 @@ package View;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Comparator;
 import java.util.Iterator;
 
 import javax.swing.JFrame;
@@ -16,18 +15,36 @@ import Model.Objects.Group;
 
 /**
  * MenuBar of specified operation
- *  
+ * 
  * @author Jimmy801
  *
  * @see {@link JMenuBar}
  */
 public class MenuBar extends JMenuBar {
+	/**
+	 * Instance of MenuBar
+	 */
 	private static MenuBar menuBarInstance = null;
-	private static JMenu fileMenu;
-	private static JMenu editMenu;
-	private JMenuItem exit, rename;
-	private JMenuItem group, ungroup, clear;
+	/**
+	 * Instance of UML canvas
+	 */
 	private Canvas canvas = Canvas.getInstance();
+	/**
+	 * UML file menu
+	 */
+	private static JMenu fileMenu;
+	/**
+	 * UML edit menu
+	 */
+	private static JMenu editMenu;
+	/**
+	 * Menu item of UML file menu
+	 */
+	private JMenuItem exit, rename;
+	/**
+	 * Menu item of UML edit file
+	 */
+	private JMenuItem group, ungroup, clear;
 
 	public MenuBar() {
 		init();
@@ -48,7 +65,7 @@ public class MenuBar extends JMenuBar {
 		exit = new JMenuItem("Exit");
 		clear = new JMenuItem("Clear");
 
-		// perform action
+		// register menu item actions
 		exit.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -79,12 +96,14 @@ public class MenuBar extends JMenuBar {
 		group = new JMenuItem("Group");
 		ungroup = new JMenuItem("Ungroup");
 
+		// register menu item actions
 		rename.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Object result = JOptionPane.showInputDialog(new JFrame(), "Enter new name:");
+				BasicObject selectedObj = canvas.getSelectedObjs()[0];
+				Object result = JOptionPane.showInputDialog(new JFrame(), "Enter new name:", selectedObj.getName());
 				if (result != null && !result.toString().isEmpty())
-					canvas.getSelectedObjs()[0].setName(result.toString());
+					selectedObj.setName(result.toString());
 				setMenuItemEnable();
 			}
 		});
@@ -99,19 +118,14 @@ public class MenuBar extends JMenuBar {
 					if (obj.isSelected()) {
 						group.addChild(obj);
 						obj.setSelected(false);
-						it.remove();
+						it.remove(); // remove obj from canvas.objs
 					}
 				}
-				group.getChildren().sort(new Comparator<BasicObject>() {
-					@Override
-					public int compare(BasicObject arg0, BasicObject arg1) {
-						return canvas.getComponentZOrder(arg0) - canvas.getComponentZOrder(arg1);
-					}
-				});
+
 				canvas.objs.add(0, group);
 				canvas.groups.add(0, group);
 				canvas.add(group, 0);
-				canvas.moveToFront();
+				canvas.resetDepth();
 				canvas.repaint();
 				setMenuItemEnable();
 			}
@@ -125,14 +139,11 @@ public class MenuBar extends JMenuBar {
 					Group g = it.next();
 					if (g.isSelected()) {
 						canvas.objs.addAll(0, g.getChildren());
-						g.getChildren().forEach((el) -> {
-							el.setSelected(false);
-							el.setParentGroup(null);
-						});
+						g.getChildren().forEach((el) -> el.setSelected(false));
 						g.getChildren().clear();
-						canvas.objs.remove(g);
+						canvas.objs.remove(g); // remove g from canvas.objs
 						canvas.remove(g);
-						it.remove();
+						it.remove(); // remove obj from canvas.groups
 						break;
 					}
 				}
@@ -152,25 +163,48 @@ public class MenuBar extends JMenuBar {
 		setMenuItemEnable();
 	}
 
+	/**
+	 * Enable rename menu item
+	 * 
+	 * @param renamedable - enable rename menu item or not
+	 */
 	public void setRenamedable(boolean renamedable) {
 		rename.setEnabled(renamedable);
 	}
 
+	/**
+	 * Enable group menu item
+	 * 
+	 * @param groupable - enable group menu item or not
+	 */
 	public void setGroupable(boolean groupable) {
 		group.setEnabled(groupable);
 	}
 
+	/**
+	 * Enable ungroup menu item
+	 * 
+	 * @param ungroupable - enable ungroup menu item or not
+	 */
 	public void setUngroupable(boolean ungroupable) {
 		ungroup.setEnabled(ungroupable);
 	}
 
+	/**
+	 * Enable clear menu item
+	 * 
+	 * @param clearable - enable clear menu item or not
+	 */
 	public void setClearable(boolean clearable) {
 		clear.setEnabled(clearable);
 	}
 
+	/**
+	 * Set menu items enable by UML canvas
+	 */
 	public void setMenuItemEnable() {
-		int selectedObjs = canvas.countObjSelected();
-		int selectedGroups = canvas.countGroupSelected();
+		int selectedObjs = canvas.countObjSelected(); // all selected objs(contain groups)
+		int selectedGroups = canvas.countGroupSelected(); // all selected groups
 		setRenamedable(selectedObjs == 1 && selectedGroups != 1);
 		setUngroupable(selectedGroups == 1 && selectedObjs == 1);
 		setGroupable(selectedObjs > 1);

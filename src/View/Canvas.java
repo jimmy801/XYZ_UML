@@ -1,13 +1,12 @@
 package View;
 
-import java.awt.Component;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.util.Comparator;
 import java.util.Vector;
 
 import javax.swing.JComponent;
-import javax.swing.JLayeredPane;
+import javax.swing.JPanel;
 
 import Control.Base.Mode;
 import Control.Base.SelectMode;
@@ -27,9 +26,9 @@ import Utils.MODE;
  * 
  * @author Jimmy801
  *
- * @see {@link JLayeredPane}
+ * @see {@link JPanel}
  */
-public class Canvas extends JLayeredPane {
+public class Canvas extends JPanel {
 	/**
 	 * Instance of canvas
 	 */
@@ -58,7 +57,7 @@ public class Canvas extends JLayeredPane {
 	 * All group of canvas
 	 */
 	public Vector<Group> groups;
-	
+
 	/**
 	 * Comparator of component by z-order
 	 */
@@ -112,7 +111,7 @@ public class Canvas extends JLayeredPane {
 	}
 
 	/**
-	 * Initial all modes of canvas by {@link Utils.MODE}
+	 * Initial all modes of canvas by {@link MODE}
 	 */
 	private static void initModes() {
 		for (MODE m : MODE.values()) {
@@ -164,7 +163,7 @@ public class Canvas extends JLayeredPane {
 	}
 
 	/**
-	 * Get arrays of selected {@link Model.Base.BasicObject} components on canvas
+	 * Get arrays of selected {@link BasicObject} components on canvas
 	 * 
 	 * @return array of selected components
 	 */
@@ -184,7 +183,7 @@ public class Canvas extends JLayeredPane {
 	}
 
 	/**
-	 * Get arrays of selected {@link Model.Objects.Group} groups on canvas
+	 * Get arrays of selected {@link Group} groups on canvas
 	 * 
 	 * @return array of selected groups
 	 */
@@ -204,8 +203,8 @@ public class Canvas extends JLayeredPane {
 	}
 
 	/**
-	 * Set z-order of children(like ports and lines) of a
-	 * {@link Model.Base.BasicObject} component on canvas
+	 * Set z-order of children(like ports and lines) of a {@link BasicObject}
+	 * component on canvas
 	 * 
 	 * @param obj - the unset z-order object
 	 */
@@ -221,41 +220,48 @@ public class Canvas extends JLayeredPane {
 	}
 
 	/**
-	 * Set z-order of children(like groups and other objects) of a
-	 * {@link Model.Objects.Group} component on canvas
+	 * Set z-order of children(like groups and other objects) of a {@link Group}
+	 * component on canvas
 	 * 
 	 * Use recursive to check whether parent group is selected.
 	 * 
-	 * @param group - the unset z-order group
+	 * @param groupZ - start depth of group
+	 * @param group  - the unset z-order group
 	 * @return group is selected or not
 	 */
 	public int setGroupZOrder(int groupZ, Group group) {
-		for(BasicObject obj: group.getChildren()) {
-			setComponentZOrder(obj, groupZ + 1);
+		for (BasicObject obj : group.getChildren()) {
+			setComponentZOrder(obj, groupZ + 1); // children must deeper than group
 			setObjZOrder(obj);
-			for(Group g: groups) {
-				if(obj == g) {
+			for (Group g : groups) { // if obj is a Group
+				if (obj == g) {
 					setGroupZOrder(groupZ + 1, g);
 					break;
 				}
 			}
-			
+
 			groupZ += getChildrenTotal(obj);
 		}
 		return groupZ;
 	}
-	
+
+	/**
+	 * Calculate number of obj and obj's children by recursive
+	 * 
+	 * @param obj - calculated object
+	 * @return number of obj's children
+	 */
 	public int getChildrenTotal(BasicObject obj) {
 		int total = 0;
-		for(Group g: groups) {
-			if(obj == g) {
-				for(BasicObject child: g.getChildren()) {
+		for (Group g : groups) { // if obj is a Group
+			if (obj == g) {
+				for (BasicObject child : g.getChildren()) {
 					total += getChildrenTotal(child);
 				}
 				break;
 			}
 		}
-		for(Port port: obj.ports) {
+		for (Port port : obj.ports) {
 			total += port.lines.size() + 1; // lines and ports
 		}
 		total += 1; // self object
@@ -265,7 +271,7 @@ public class Canvas extends JLayeredPane {
 	/**
 	 * Change z-orders of all selected components on canvas
 	 */
-	public void moveToFront() {
+	public void resetDepth() {
 		boolean unsort = false; // check order of objs need to be sorted.
 
 		// move selected objs to front
@@ -273,18 +279,20 @@ public class Canvas extends JLayeredPane {
 			BasicObject obj = objs.get(i);
 			if (obj.isSelected()) {
 				unsort = true;
-				moveToFront(obj);
-				setObjZOrder(obj);
+				setComponentZOrder(obj, 0);
+				setObjZOrder(obj); // move its ports and lines
+
+				// if obj is a Group, all of its children also need to move to front
 				for (Group group : groups) {
-					if(obj == group) {
+					if (obj == group) {
 						setGroupZOrder(0, group);
-						break;
+						break; // at most one possible
 					}
 				}
 			}
 		}
 
-		if (unsort) {
+		if (unsort) { // sort objs and groups vector by z-order
 			objs.sort(zOrderCmp);
 			groups.sort(zOrderCmp);
 		}

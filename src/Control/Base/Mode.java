@@ -16,7 +16,13 @@ import View.MenuBar;
  */
 public class Mode implements MouseListener, MouseMotionListener {
 
+	/**
+	 * Canvas instance
+	 */
 	protected Canvas canvas = Canvas.getInstance();
+	/**
+	 * Menu bar instance
+	 */
 	protected MenuBar menuBar = MenuBar.getInstance();
 
 	@Override

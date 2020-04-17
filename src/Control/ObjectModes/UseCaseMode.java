@@ -12,7 +12,7 @@ import Model.Objects.UseCase;
  * 
  * @author Jimmy801
  *
- * @see {@link Control.Base.ObjectMode}
+ * @see {@link ObjectMode}
  */
 public class UseCaseMode extends ObjectMode {
 	public UseCaseMode() {

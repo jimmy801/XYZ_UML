@@ -15,6 +15,14 @@ import Model.Base.Port;
  * @see {@link Model.Base.Line}
  */
 public class GeneralizationLine extends Line {
+	/**
+	 * Initialize by source port and destination port
+	 * 
+	 * @param src - source port
+	 * @param dst - destination port
+	 * 
+	 * @see {@link Line}
+	 */
 	public GeneralizationLine(Port src, Port dst) {
 		super(src, dst);
 	}

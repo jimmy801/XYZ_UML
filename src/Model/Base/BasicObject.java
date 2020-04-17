@@ -8,8 +8,6 @@ import java.util.Vector;
 
 import javax.swing.JComponent;
 
-import Model.Objects.Group;
-
 /**
  * Base of all object components
  * 
@@ -18,59 +16,130 @@ import Model.Objects.Group;
  * @see {@link JComponent}
  */
 public class BasicObject extends JComponent {
+	/**
+	 * Ports of connection lines
+	 */
 	public Vector<Port> ports;
-	protected Group parentGroup;
+	/**
+	 * Check component is selected by user
+	 */
 	protected boolean selected;
+	/**
+	 * The number of ports
+	 */
 	private int PORT_NUM = 4;
 
 	public BasicObject() {
 	}
 
-	public BasicObject(Point pt, int w, int h) {
-		this(pt, w, h, "");
+	/**
+	 * Initial by top-left point, width, and height.<br>
+	 * Default name is empty
+	 * 
+	 * @param p      - top-left corner point of this component
+	 * @param width  - width of this component
+	 * @param height - height of this component
+	 */
+	public BasicObject(Point p, int width, int height) {
+		this(p, width, height, "");
 	}
 
+	/**
+	 * Initial by left x, top y, and dimension.<br>
+	 * Default name is empty
+	 * 
+	 * @param x   - left position of this component
+	 * @param y   - top position of this component
+	 * @param dim - dimension of this component
+	 */
 	public BasicObject(int x, int y, Dimension dim) {
 		this(x, y, dim.width, dim.height, "");
 	}
 
-	public BasicObject(Point pt, Dimension dim) {
-		this(pt, dim, "");
+	/**
+	 * Initial by top-left point, and dimension.<br>
+	 * Default name is empty
+	 * 
+	 * @param p   - top-left corner point of this component
+	 * @param dim - dimension of this component
+	 */
+	public BasicObject(Point p, Dimension dim) {
+		this(p, dim, "");
 	}
 
-	public BasicObject(int x, int y, int w, int h) {
-		this(x, y, w, h, "");
+	/**
+	 * Initial by left x, top y, width, and height.<br>
+	 * Default name is empty
+	 * 
+	 * @param x      - left position of this component
+	 * @param y      - top position of this component
+	 * @param width  - width of this component
+	 * @param height - height of this component
+	 */
+	public BasicObject(int x, int y, int width, int height) {
+		this(x, y, width, height, "");
 	}
 
-	public BasicObject(Point pt, int w, int h, String name) {
-		this(pt.x, pt.y, w, h, name);
+	/**
+	 * Initial by top-left point, width, height, and name of component.
+	 * 
+	 * @param p      - top-left corner point of this component
+	 * @param width  - width of this component
+	 * @param height - height of this component
+	 * @param name   - name of this component
+	 */
+	public BasicObject(Point p, int width, int height, String name) {
+		this(p.x, p.y, width, height, name);
 	}
 
+	/**
+	 * Initial by top-left point, width, height, and name of component.
+	 * 
+	 * @param x    - left position of this component
+	 * @param y    - top position of this component
+	 * @param dim  - dimension of this component
+	 * @param name - name of this component
+	 */
 	public BasicObject(int x, int y, Dimension dim, String name) {
 		this(x, y, dim.width, dim.height, name);
 	}
 
-	public BasicObject(Point pt, Dimension dim, String name) {
-		this(pt.x, pt.y, dim.width, dim.height, name);
+	/**
+	 * Initial by top-left point, width, height, and name of component.
+	 * 
+	 * @param p    - top-left corner point of this component
+	 * @param dim  - dimension of this component
+	 * @param name - name of this component
+	 */
+	public BasicObject(Point p, Dimension dim, String name) {
+		this(p.x, p.y, dim.width, dim.height, name);
 	}
 
+	/**
+	 * Initial by top-left point, width, height, and name of component.
+	 * 
+	 * @param x      - left position of this component
+	 * @param y      - top position of this component
+	 * @param width  - width of this component
+	 * @param height - height of this component
+	 * @param name   - name of this component
+	 */
 	public BasicObject(int x, int y, int width, int height, String name) {
 		this.ports = new Vector<>();
 		for (int i = 0; i < PORT_NUM; ++i) {
 			this.ports.add(new Port(this.getLocation(), this));
 		}
-		parentGroup = null;
 		this.setName(name);
 		this.setSelected(true);
 		this.setBounds(x, y, width, height);
 	}
-	
+
 	@Override
 	public void setBounds(int x, int y, int width, int height) {
 		super.setBounds(x, y, width, height);
 		setPortLocation();
 	}
-	
+
 	@Override
 	public void setName(String name) {
 		super.setName(name);
@@ -79,10 +148,13 @@ public class BasicObject extends JComponent {
 
 	@Override
 	public boolean contains(Point p) {
-		return (p.x > this.getX()) && (p.y > this.getY()) && 
-				(p.x < this.getX() + this.getWidth()) && (p.y < this.getY() + this.getHeight());
+		return (p.x > this.getX()) && (p.y > this.getY()) && (p.x < this.getX() + this.getWidth())
+				&& (p.y < this.getY() + this.getHeight());
 	}
 
+	/**
+	 * Set location of ports by this object
+	 */
 	private void setPortLocation() {
 		// left, top, right, bottom
 		int isLeft, isTop;
@@ -96,12 +168,22 @@ public class BasicObject extends JComponent {
 		}
 	}
 
+	/**
+	 * Set ports are visible or not
+	 * 
+	 * @param isVisible - port set to visible or not
+	 */
 	public void setPortsVisible(boolean isVisible) {
 		for (Port port : ports) {
 			port.setVisible(isVisible);
 		}
 	}
 
+	/**
+	 * Clear old ports and set new number of ports
+	 * 
+	 * @param PORT_NUM - new number of ports
+	 */
 	public void setPortNumber(int PORT_NUM) {
 		this.PORT_NUM = PORT_NUM;
 		ports.clear();
@@ -110,27 +192,28 @@ public class BasicObject extends JComponent {
 		}
 	}
 
+	/**
+	 * Set component is selected by user
+	 * 
+	 * @param selected - user is selected this component or not
+	 */
 	public void setSelected(boolean selected) {
 		this.selected = selected;
 		setPortsVisible(selected);
 	}
 
+	/**
+	 * Get this component is selected by user or not
+	 * 
+	 * @return this component is selected by user or not
+	 */
 	public boolean isSelected() {
 		return selected;
 	}
 
-	public Group getParentGroup() {
-		return parentGroup;
-	}
-
-	public void setParentGroup(Group parentGroup) {
-		this.parentGroup = parentGroup;
-	}
-
 	/**
-	 * Calculate the dimension of text.
+	 * Calculate the dimension of name.
 	 * 
-	 * @param text - The string of text
 	 * @return {@link Dimension} dimension of text
 	 */
 	public Dimension getTextSize() {

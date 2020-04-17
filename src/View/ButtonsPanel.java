@@ -19,8 +19,17 @@ import Utils.MODE;
  * @see {@link JPanel}
  */
 public class ButtonsPanel extends JPanel {
+	/**
+	 * Mode buttons of this panel
+	 */
 	Vector<JButton> btns;
+	/**
+	 * UML canvas
+	 */
 	private Canvas canvas = Canvas.getInstance();
+	/**
+	 * UML menu bar
+	 */
 	private MenuBar menuBar = MenuBar.getInstance();
 
 	public ButtonsPanel() {
@@ -33,8 +42,10 @@ public class ButtonsPanel extends JPanel {
 			btn.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
+					// change previous style of button
 					btns.get(canvas.getMode()).setForeground(Color.DARK_GRAY);
 					btns.get(m.getModeID()).setForeground(Color.RED);
+					
 					menuBar.setMenuItemEnable();
 					canvas.setMode(m.getModeID());
 				}

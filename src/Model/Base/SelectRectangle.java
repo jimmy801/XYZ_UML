@@ -2,7 +2,6 @@ package Model.Base;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -22,14 +21,19 @@ public class SelectRectangle extends JComponent {
 		this(new Point());
 	}
 
+	/**
+	 * Initialize component by top-left corner
+	 * 
+	 * @param p - top-left corner
+	 */
 	public SelectRectangle(Point p) {
 		this.setLocation(p);
 	}
 
 	@Override
 	public boolean contains(Point p) {
-		return (p.x > this.getX()) && (p.y > this.getY()) &&
-				(p.x < this.getX() + this.getWidth()) && (p.y < this.getY() + this.getHeight());
+		return (p.x > this.getX()) && (p.y > this.getY()) && (p.x < this.getX() + this.getWidth())
+				&& (p.y < this.getY() + this.getHeight());
 	}
 
 	@Override

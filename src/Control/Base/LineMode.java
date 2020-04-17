@@ -15,11 +15,29 @@ import Model.Base.Port;
  * @see {@link Mode}
  */
 public class LineMode extends Mode {
+	/**
+	 * press point
+	 */
 	protected Point press;
+	/**
+	 * release point
+	 */
 	protected Point release;
+	/**
+	 * press port
+	 */
 	protected Port pressP;
+	/**
+	 * release port
+	 */
 	protected Port releaseP;
+	/**
+	 * parent component of press port
+	 */
 	protected BasicObject pressObj;
+	/**
+	 * parent component of release port
+	 */
 	protected BasicObject releaseObj;
 
 	public LineMode() {
@@ -32,6 +50,8 @@ public class LineMode extends Mode {
 	public void mousePressed(MouseEvent e) {
 		super.mousePressed(e);
 		press.setLocation(e.getPoint());
+
+		// set press port and its parent
 		for (Port p : canvas.ports) {
 			if (p.contains(press)) {
 				pressObj = p.getParent();
@@ -44,11 +64,34 @@ public class LineMode extends Mode {
 	public void mouseReleased(MouseEvent e) {
 		super.mouseReleased(e);
 		release.setLocation(e.getPoint());
+
+		// make ports visible to origin state
 		for (Port p : canvas.ports) {
+			if (p.contains(release)) {
+				releaseObj = p.getParent();
+				releaseP = p;
+			}
 			p.setVisible(p.getParent().isSelected());
 		}
 	}
 
+	@Override
+	public void mouseMoved(MouseEvent e) {
+		super.mouseMoved(e);
+		changePortStyle(e.getPoint());
+		canvas.repaint();
+	}
+
+	@Override
+	public void mouseDragged(MouseEvent e) {
+		super.mouseDragged(e);
+		changePortStyle(e.getPoint(), true);
+		canvas.repaint();
+	}
+
+	/**
+	 * Initialize press and release ports and their parents
+	 */
 	public void initPtr() {
 		pressObj = null;
 		pressP = null;
@@ -56,11 +99,22 @@ public class LineMode extends Mode {
 		releaseP = null;
 	}
 
-	public void changePortColor(Point pt) {
-		changePortColor(pt, false);
+	/**
+	 * Change port style by point
+	 * 
+	 * @param pt - the point which will effect port color
+	 */
+	public void changePortStyle(Point pt) {
+		changePortStyle(pt, false);
 	}
 
-	public void changePortColor(Point pt, boolean drag) {
+	/**
+	 * Change port style by point
+	 * 
+	 * @param pt   - the point which will effect port color
+	 * @param drag - if trigger by mouse drag event, all port must be visible
+	 */
+	public void changePortStyle(Point pt, boolean drag) {
 		for (Port p : canvas.ports) {
 			if (p.contains(pt)) {
 				p.setColor(p.getParent() != pressObj ? Color.GREEN : Color.RED);
@@ -72,32 +126,12 @@ public class LineMode extends Mode {
 		}
 	}
 
-	@Override
-	public void mouseMoved(MouseEvent e) {
-		super.mouseMoved(e);
-		changePortColor(e.getPoint());
-		canvas.repaint();
-	}
-
-	@Override
-	public void mouseDragged(MouseEvent e) {
-		super.mouseDragged(e);
-		changePortColor(e.getPoint(), true);
-		canvas.repaint();
-	}
-
+	/**
+	 * Check if line connected
+	 * 
+	 * @return line is connected or not
+	 */
 	protected boolean connectLine() {
-		initPtr();
-		for (Port p : canvas.ports) {
-			if (p.contains(press)) {
-				pressObj = p.getParent();
-				pressP = p;
-			} else if (p.contains(release)) {
-				releaseObj = p.getParent();
-				releaseP = p;
-			}
-		}
-
 		return pressObj != releaseObj && pressObj != null && releaseObj != null;
 	}
 }

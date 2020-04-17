@@ -11,7 +11,7 @@ import Model.Lines.AssociationLine;
  * 
  * @author Jimmy801
  *
- * @see {@link Control.Base.LineMode}
+ * @see {@link LineMode}
  */
 public class AssociationMode extends LineMode {
 	public AssociationMode() {
@@ -30,7 +30,7 @@ public class AssociationMode extends LineMode {
 			releaseP.addLine(line);
 		}
 		initPtr();
-		changePortColor(e.getPoint());
+		changePortStyle(e.getPoint());
 		canvas.repaint();
 	}
 }

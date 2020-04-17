@@ -19,6 +19,7 @@ public class ObjectMode extends Mode {
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		super.mouseClicked(e);
+		// set other object unselected before add new object
 		for (BasicObject obj : canvas.objs) {
 			obj.setSelected(false);
 		}
