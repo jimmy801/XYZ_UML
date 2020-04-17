@@ -1,13 +1,12 @@
 package View;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.Vector;
 
+import javax.swing.JComponent;
 import javax.swing.JLayeredPane;
 
 import Control.Base.Mode;
@@ -59,6 +58,16 @@ public class Canvas extends JLayeredPane {
 	 * All group of canvas
 	 */
 	public Vector<Group> groups;
+	
+	/**
+	 * Comparator of component by z-order
+	 */
+	private Comparator<JComponent> zOrderCmp = new Comparator<JComponent>() {
+		@Override
+		public int compare(JComponent arg0, JComponent arg1) {
+			return getComponentZOrder(arg0) - getComponentZOrder(arg1);
+		}
+	};
 
 	/**
 	 * Initialize canvas
@@ -71,7 +80,7 @@ public class Canvas extends JLayeredPane {
 		modes = new Vector<Mode>();
 		registerCanvasListener();
 	}
-	
+
 	/**
 	 * Register non-Modes listeners of canvas
 	 */
@@ -91,6 +100,7 @@ public class Canvas extends JLayeredPane {
 
 	/**
 	 * Get instance of Canvas
+	 * 
 	 * @return {@link Canvas} CanvasInstance
 	 */
 	public static Canvas getInstance() {
@@ -127,16 +137,12 @@ public class Canvas extends JLayeredPane {
 				break;
 			}
 		}
-		
-	}
 
-	@Override
-	public boolean isOptimizedDrawingEnabled() {
-		return false;
 	}
 
 	/**
 	 * Get id of current mode
+	 * 
 	 * @return current mode id
 	 */
 	public int getMode() {
@@ -145,6 +151,7 @@ public class Canvas extends JLayeredPane {
 
 	/**
 	 * Change mode by mode id
+	 * 
 	 * @param mode - change mode id
 	 */
 	public void setMode(int mode) {
@@ -158,6 +165,7 @@ public class Canvas extends JLayeredPane {
 
 	/**
 	 * Get arrays of selected {@link Model.Base.BasicObject} components on canvas
+	 * 
 	 * @return array of selected components
 	 */
 	public BasicObject[] getSelectedObjs() {
@@ -166,6 +174,7 @@ public class Canvas extends JLayeredPane {
 
 	/**
 	 * Get number of selected objects
+	 * 
 	 * @return number of selected objects
 	 * 
 	 * @see {@link #getSelectedObjs}
@@ -176,14 +185,16 @@ public class Canvas extends JLayeredPane {
 
 	/**
 	 * Get arrays of selected {@link Model.Objects.Group} groups on canvas
+	 * 
 	 * @return array of selected groups
 	 */
 	public Group[] getSelectedGroups() {
 		return groups.stream().filter(e -> e.isSelected()).toArray(Group[]::new);
 	}
-	
+
 	/**
 	 * Get number of selected groups
+	 * 
 	 * @return number of selected groups
 	 * 
 	 * @see {@link #getSelectedGroups}
@@ -193,7 +204,9 @@ public class Canvas extends JLayeredPane {
 	}
 
 	/**
-	 * Set z-order of children(like ports and lines) of a {@link Model.Base.BasicObject} component on canvas
+	 * Set z-order of children(like ports and lines) of a
+	 * {@link Model.Base.BasicObject} component on canvas
+	 * 
 	 * @param obj - the unset z-order object
 	 */
 	public void setObjZOrder(BasicObject obj) {
@@ -208,36 +221,53 @@ public class Canvas extends JLayeredPane {
 	}
 
 	/**
-	 * Set z-order of children(like groups and other objects) of a {@link Model.Objects.Group} component on canvas
+	 * Set z-order of children(like groups and other objects) of a
+	 * {@link Model.Objects.Group} component on canvas
 	 * 
 	 * Use recursive to check whether parent group is selected.
 	 * 
 	 * @param group - the unset z-order group
 	 * @return group is selected or not
 	 */
-	public boolean setGroupZOrder(Group group) {
-		boolean selected = group.isSelected();
-		if (group.getParentGroup() != null) {
-			selected = setGroupZOrder(group.getParentGroup());
+	public int setGroupZOrder(int groupZ, Group group) {
+		for(BasicObject obj: group.getChildren()) {
+			setComponentZOrder(obj, groupZ + 1);
+			setObjZOrder(obj);
+			for(Group g: groups) {
+				if(obj == g) {
+					setGroupZOrder(groupZ + 1, g);
+					break;
+				}
+			}
+			
+			groupZ += getChildrenTotal(obj);
 		}
-		if (selected) {
-			int GZOrder = getComponentZOrder(group);
-			int childrenSize = group.getChildren().size();
-			for (int i = childrenSize - 1; i >= 0; --i) {
-				BasicObject obj = group.getChildren().get(i);
-				setComponentZOrder(obj, GZOrder + i + 1);
-				setObjZOrder(obj);
+		return groupZ;
+	}
+	
+	public int getChildrenTotal(BasicObject obj) {
+		int total = 0;
+		for(Group g: groups) {
+			if(obj == g) {
+				for(BasicObject child: g.getChildren()) {
+					total += getChildrenTotal(child);
+				}
+				break;
 			}
 		}
-		return selected;
+		for(Port port: obj.ports) {
+			total += port.lines.size() + 1; // lines and ports
+		}
+		total += 1; // self object
+		return total;
 	}
 
 	/**
 	 * Change z-orders of all selected components on canvas
 	 */
 	public void moveToFront() {
-		boolean unsort = false; // check order of objs need to be sorted. 
-		
+		boolean unsort = false; // check order of objs need to be sorted.
+
 		// move selected objs to front
 		for (int i = objs.size() - 1; i >= 0; --i) { // reverse move to front, make sure z-order wouldn't be reversed
 			BasicObject obj = objs.get(i);
@@ -245,21 +275,18 @@ public class Canvas extends JLayeredPane {
 				unsort = true;
 				moveToFront(obj);
 				setObjZOrder(obj);
+				for (Group group : groups) {
+					if(obj == group) {
+						setGroupZOrder(0, group);
+						break;
+					}
+				}
 			}
 		}
-		
-		// move selected groups to front
-		for (Group group: groups) {	
-			setGroupZOrder(group);
-		}
-		
+
 		if (unsort) {
-			objs.sort(new Comparator<BasicObject>() {
-				@Override
-				public int compare(BasicObject arg0, BasicObject arg1) {
-					return getComponentZOrder(arg0) - getComponentZOrder(arg1);
-				}
-			});
+			objs.sort(zOrderCmp);
+			groups.sort(zOrderCmp);
 		}
 		this.repaint();
 	}
