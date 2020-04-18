@@ -4,6 +4,7 @@ import java.awt.event.MouseEvent;
 
 import Control.Base.LineMode;
 import Model.Base.Line;
+import Model.Base.Port;
 import Model.Lines.AssociationLine;
 
 /**
@@ -14,8 +15,24 @@ import Model.Lines.AssociationLine;
  * @see {@link LineMode}
  */
 public class AssociationMode extends LineMode {
+
 	public AssociationMode() {
 		super();
+	}
+
+	@Override
+	public void mouseDragged(MouseEvent e) {
+		super.mouseDragged(e);
+
+		if (pressP != null) {
+			if (draggedLine != null) {
+				canvas.remove(draggedLine);
+			}
+			draggedLine = new AssociationLine(pressP, new Port(e.getPoint(), null));
+			draggedLine.setSize(canvas.getWidth(), canvas.getHeight());
+			canvas.add(draggedLine, 0);
+			canvas.repaint();
+		}
 	}
 
 	@Override
@@ -28,6 +45,9 @@ public class AssociationMode extends LineMode {
 			canvas.add(line, 0);
 			pressP.addLine(line);
 			releaseP.addLine(line);
+		}
+		if (draggedLine != null) {
+			canvas.remove(draggedLine);
 		}
 		initPtr();
 		changePortStyle(e.getPoint());

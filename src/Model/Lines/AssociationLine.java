@@ -30,7 +30,7 @@ public class AssociationLine extends Line {
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		g.setColor(Color.BLACK);
+		g.setColor(lineColor);
 		Point srcPt = src.getLocation();
 		Point dstPt = dst.getLocation();
 		int dis = (int) srcPt.distance(dstPt);

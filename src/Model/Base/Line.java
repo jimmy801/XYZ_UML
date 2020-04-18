@@ -1,5 +1,7 @@
 package Model.Base;
 
+import java.awt.Color;
+
 import javax.swing.JComponent;
 
 /**
@@ -18,6 +20,9 @@ public class Line extends JComponent {
 	 * Destination of line
 	 */
 	protected Port dst;
+	
+	protected Color lineColor;
+	
 	/**
 	 * Length of line arrow
 	 */
@@ -35,6 +40,7 @@ public class Line extends JComponent {
 	public Line(Port src, Port dst) {
 		this.src = src;
 		this.dst = dst;
+		this.lineColor = Color.BLACK;
 	}
 
 	/**
@@ -53,5 +59,9 @@ public class Line extends JComponent {
 	 */
 	public Port getDst() {
 		return dst;
+	}
+	
+	public void setColor(Color lineColor) {
+		this.lineColor = lineColor;
 	}
 }

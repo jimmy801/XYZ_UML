@@ -5,6 +5,7 @@ import java.awt.Point;
 import java.awt.event.MouseEvent;
 
 import Model.Base.BasicObject;
+import Model.Base.Line;
 import Model.Base.Port;
 
 /**
@@ -16,29 +17,33 @@ import Model.Base.Port;
  */
 public class LineMode extends Mode {
 	/**
-	 * press point
+	 * Press point
 	 */
 	protected Point press;
 	/**
-	 * release point
+	 * Release point
 	 */
 	protected Point release;
 	/**
-	 * press port
+	 * Press port
 	 */
 	protected Port pressP;
 	/**
-	 * release port
+	 * Release port
 	 */
 	protected Port releaseP;
 	/**
-	 * parent component of press port
+	 * Parent component of press port
 	 */
 	protected BasicObject pressObj;
 	/**
-	 * parent component of release port
+	 * Parent component of release port
 	 */
 	protected BasicObject releaseObj;
+	/**
+	 * Showing when press on port and dragging mode line
+	 */
+	protected Line draggedLine;
 
 	public LineMode() {
 		press = new Point();
@@ -97,6 +102,7 @@ public class LineMode extends Mode {
 		pressP = null;
 		releaseObj = null;
 		releaseP = null;
+		draggedLine = null;
 	}
 
 	/**

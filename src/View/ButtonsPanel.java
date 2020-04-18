@@ -1,6 +1,7 @@
 package View;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -34,17 +35,23 @@ public class ButtonsPanel extends JPanel {
 
 	public ButtonsPanel() {
 		setLayout(new GridLayout(6, 0));
+		Color initColor = new Color(153, 153, 204);
+		Color focusColor = new Color(157, 183, 183);
+		Font btnFont = new Font("Arial", Font.BOLD, 20);
 		btns = new Vector<JButton>();
 		for (MODE m : MODE.values()) {
 			JButton btn = new JButton(m.getTitle());
+			btn.setFont(btnFont);
 			btn.setForeground(Color.DARK_GRAY);
-			btn.setBackground(Color.WHITE);
+			btn.setBackground(initColor);
 			btn.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					// change previous style of button
 					btns.get(canvas.getMode()).setForeground(Color.DARK_GRAY);
-					btns.get(m.getModeID()).setForeground(Color.RED);
+					btns.get(canvas.getMode()).setBackground(initColor);
+					btn.setForeground(Color.RED);
+					btn.setBackground(focusColor);
 					
 					menuBar.setMenuItemEnable();
 					canvas.setMode(m.getModeID());
@@ -53,5 +60,6 @@ public class ButtonsPanel extends JPanel {
 			this.add(btn);
 			btns.add(btn);
 		}
+		btns.get(0).doClick();
 	}
 }
