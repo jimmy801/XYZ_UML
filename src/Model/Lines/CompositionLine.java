@@ -30,20 +30,27 @@ public class CompositionLine extends Line {
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		g.setColor(lineColor);
+		g.setColor(Color.BLACK);
+
 		Point srcPt = src.getLocation();
 		Point dstPt = dst.getLocation();
-		int dis = (int) srcPt.distance(dstPt);
-		Point online = new Point(dstPt.x + ARROW_LEN * (srcPt.x - dstPt.x) / dis,
-				dstPt.y + ARROW_LEN * (srcPt.y - dstPt.y) / dis);
-		Point twoonline = new Point(dstPt.x + ARROW_LEN * 2 * (srcPt.x - dstPt.x) / dis,
-				dstPt.y + ARROW_LEN * 2 * (srcPt.y - dstPt.y) / dis);
-		Point normal = new Point(-ARROW_LEN * (dstPt.y - srcPt.y) / dis, ARROW_LEN * (dstPt.x - srcPt.x) / dis);
 
-		int x[] = { dstPt.x, online.x + normal.x, twoonline.x, online.x - normal.x };
-		int y[] = { dstPt.y, online.y + normal.y, twoonline.y, online.y - normal.y };
+		int dis = (int) srcPt.distance(dstPt);
+		if (dis == 0) {
+			return;
+		}
+
+		Point crossPoint = new Point(dstPt.x + Math.round(CROSS_LEN * (srcPt.x - dstPt.x) / dis),
+				dstPt.y + Math.round(CROSS_LEN * (srcPt.y - dstPt.y) / dis));
+		Point diamondTail = new Point(dstPt.x + Math.round(CROSS_LEN * 2 * (srcPt.x - dstPt.x) / dis),
+				dstPt.y + Math.round(CROSS_LEN * 2 * (srcPt.y - dstPt.y) / dis));
+		Point normalLen = new Point(-Math.round(NORMAL_LEN * (dstPt.y - srcPt.y) / dis),
+				Math.round(NORMAL_LEN * (dstPt.x - srcPt.x) / dis));
+
 		g.drawLine(srcPt.x, srcPt.y, dstPt.x, dstPt.y);
 
+		int x[] = { dstPt.x, crossPoint.x + normalLen.x, diamondTail.x, crossPoint.x - normalLen.x };
+		int y[] = { dstPt.y, crossPoint.y + normalLen.y, diamondTail.y, crossPoint.y - normalLen.y };
 		g.fillPolygon(x, y, 4);
 	}
 }

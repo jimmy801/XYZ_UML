@@ -214,7 +214,10 @@ public class Canvas extends JPanel {
 			setComponentZOrder(port, OZOrder);
 			int PZOrder = getComponentZOrder(port);
 			for (Line line : port.lines) {
-				setComponentZOrder(line, PZOrder);
+				Port src = line.getSrc();
+				Port dst = line.getDst();
+				Port otherPort = (src == port) ? dst : src;
+				setComponentZOrder(line, Math.min(getComponentZOrder(otherPort), PZOrder));
 			}
 		}
 	}

@@ -42,17 +42,17 @@ public class ButtonsPanel extends JPanel {
 		for (MODE m : MODE.values()) {
 			JButton btn = new JButton(m.getTitle());
 			btn.setFont(btnFont);
-			btn.setForeground(Color.DARK_GRAY);
+			btn.setForeground(Color.WHITE);
 			btn.setBackground(initColor);
 			btn.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					// change previous style of button
-					btns.get(canvas.getMode()).setForeground(Color.DARK_GRAY);
+					btns.get(canvas.getMode()).setForeground(Color.WHITE);
 					btns.get(canvas.getMode()).setBackground(initColor);
 					btn.setForeground(Color.RED);
 					btn.setBackground(focusColor);
-					
+
 					menuBar.setMenuItemEnable();
 					canvas.setMode(m.getModeID());
 				}

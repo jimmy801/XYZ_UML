@@ -15,11 +15,11 @@ import View.MenuBar;
  */
 public class UML extends JFrame {
 	/**
-	 * mode buttons panel
+	 * Mode buttons panel
 	 */
 	private ButtonsPanel btnPanel;
 	/**
-	 * canvas container
+	 * Canvas container
 	 */
 	private Canvas canvasPanel;
 	/**

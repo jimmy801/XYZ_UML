@@ -1,7 +1,5 @@
 package Model.Base;
 
-import java.awt.Color;
-
 import javax.swing.JComponent;
 
 /**
@@ -20,13 +18,18 @@ public class Line extends JComponent {
 	 * Destination of line
 	 */
 	protected Port dst;
-	
-	protected Color lineColor;
-	
 	/**
 	 * Length of line arrow
 	 */
-	public static final int ARROW_LEN = 8;
+	protected static int ARROW_LEN;
+	/**
+	 * Distance of line arrow vertex on line
+	 */
+	protected static int CROSS_LEN;
+	/**
+	 * Distance of line and arrow tail
+	 */
+	protected static int NORMAL_LEN;
 
 	public Line() {
 	}
@@ -40,7 +43,7 @@ public class Line extends JComponent {
 	public Line(Port src, Port dst) {
 		this.src = src;
 		this.dst = dst;
-		this.lineColor = Color.BLACK;
+		setArrowLength(15);
 	}
 
 	/**
@@ -60,8 +63,17 @@ public class Line extends JComponent {
 	public Port getDst() {
 		return dst;
 	}
-	
-	public void setColor(Color lineColor) {
-		this.lineColor = lineColor;
+
+	/**
+	 * Set length of arrow<br>
+	 * Default ratio value of arrow_length: cross_length : normal_length is 3: 4: 5
+	 * 
+	 * @param arrLen - arrow length of lines
+	 */
+	public void setArrowLength(int arrLen) {
+		ARROW_LEN = arrLen;
+		// 3, 4, 5 triangle
+		CROSS_LEN = Math.round(ARROW_LEN / 5 * 4);
+		NORMAL_LEN = Math.round(ARROW_LEN / 5 * 3);
 	}
 }
