@@ -22,11 +22,11 @@ public class Port extends JComponent {
 	/**
 	 * Width of this component
 	 */
-	public static final int width = 5;
+	public static final int width = 8;
 	/**
 	 * Height of this component
 	 */
-	public static final int height = 5;
+	public static final int height = 8;
 	/**
 	 * Parent of this component
 	 */
