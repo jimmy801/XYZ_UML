@@ -40,17 +40,27 @@ public class CompositionLine extends Line {
 			return;
 		}
 
-		Point crossPoint = new Point(dstPt.x + Math.round(CROSS_LEN * (srcPt.x - dstPt.x) / dis),
-				dstPt.y + Math.round(CROSS_LEN * (srcPt.y - dstPt.y) / dis));
-		Point diamondTail = new Point(dstPt.x + Math.round(CROSS_LEN * 2 * (srcPt.x - dstPt.x) / dis),
-				dstPt.y + Math.round(CROSS_LEN * 2 * (srcPt.y - dstPt.y) / dis));
-		Point normalLen = new Point(-Math.round(NORMAL_LEN * (dstPt.y - srcPt.y) / dis),
-				Math.round(NORMAL_LEN * (dstPt.x - srcPt.x) / dis));
-
 		g.drawLine(srcPt.x, srcPt.y, dstPt.x, dstPt.y);
 
-		int x[] = { dstPt.x, crossPoint.x + normalLen.x, diamondTail.x, crossPoint.x - normalLen.x };
-		int y[] = { dstPt.y, crossPoint.y + normalLen.y, diamondTail.y, crossPoint.y - normalLen.y };
+		// draw diamond
+		Point diamondCrossPoint = new Point(srcPt.x + Math.round(CROSS_LEN * (dstPt.x - srcPt.x) / dis),
+				srcPt.y + Math.round(CROSS_LEN * (dstPt.y - srcPt.y) / dis));
+		Point diamondTail = new Point(srcPt.x + Math.round(CROSS_LEN * 2 * (dstPt.x - srcPt.x) / dis),
+				srcPt.y + Math.round(CROSS_LEN * 2 * (dstPt.y - srcPt.y) / dis));
+		Point diamondNormalLen = new Point(-Math.round(NORMAL_LEN * (srcPt.y - dstPt.y) / dis),
+				Math.round(NORMAL_LEN * (srcPt.x - dstPt.x) / dis));
+
+		int x[] = { srcPt.x, diamondCrossPoint.x + diamondNormalLen.x, diamondTail.x, diamondCrossPoint.x - diamondNormalLen.x };
+		int y[] = { srcPt.y, diamondCrossPoint.y + diamondNormalLen.y, diamondTail.y, diamondCrossPoint.y - diamondNormalLen.y };
 		g.fillPolygon(x, y, 4);
+		
+		// draw arrow
+		Point arrowCrossPoint = new Point(dstPt.x + Math.round(CROSS_LEN * (srcPt.x - dstPt.x) / dis),
+				dstPt.y + Math.round(CROSS_LEN * (srcPt.y - dstPt.y) / dis));
+		Point arrowNormalLen = new Point(-Math.round(NORMAL_LEN * (dstPt.y - srcPt.y) / dis),
+				Math.round(NORMAL_LEN * (dstPt.x - srcPt.x) / dis));
+
+		g.drawLine(dstPt.x, dstPt.y, arrowCrossPoint.x + arrowNormalLen.x, arrowCrossPoint.y + arrowNormalLen.y);
+		g.drawLine(dstPt.x, dstPt.y, arrowCrossPoint.x - arrowNormalLen.x, arrowCrossPoint.y - arrowNormalLen.y);
 	}
 }

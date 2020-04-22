@@ -18,11 +18,11 @@ public class UseCase extends BasicObject {
 	/**
 	 * Width of this component
 	 */
-	private final static int width = 150;
+	private final static int width = 120;
 	/**
 	 * Height of this component
 	 */
-	private final static int height = 75;
+	private final static int height = 70;
 
 	/**
 	 * Initial by top-left point and name of component.
