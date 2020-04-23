@@ -59,36 +59,62 @@ public class Port extends JComponent {
 		color = Color.BLACK;
 		this.setBounds(x, y, width, height);
 	}
-	
+
+	/**
+	 * Find this port is which position of parent object
+	 * 
+	 * @return 0 for Left, 1 for Top, 2 for Right, 3 for Bottom
+	 */
 	private int whichPort() {
 		return parent.ports.indexOf(this);
 	}
-	
+
+	/**
+	 * Point in the part(left, top, right, bottom) of parent is same as position of
+	 * this port.
+	 * 
+	 * <br>
+	 * ----------<br>
+	 * |\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/|<br>
+	 * |&nbsp;&nbsp;\&nbsp;&nbsp;&nbsp;T&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;|<br>
+	 * |&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br>
+	 * |&nbsp;L&nbsp;&nbsp;&nbsp;\/&nbsp;&nbsp;&nbsp;&nbsp;R|<br>
+	 * |&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br>
+	 * |&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br>
+	 * |&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;B&nbsp;&nbsp;&nbsp;\&nbsp;&nbsp;|<br>
+	 * |/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\|<br>
+	 * ----------<br>
+	 * 
+	 * @param p - the point must be detected
+	 * @return true if position of port is same as the part of parent.
+	 * 
+	 * @see {@link #whichPort()}
+	 */
 	private boolean parentContain(Point p) {
-		if(!parent.contains(p)) {
+		if (!parent.contains(p)) {
 			return false;
 		}
 		Point tL = new Point(parent.getX(), parent.getY());
 		Point tR = new Point(parent.getX() + parent.getWidth(), parent.getY());
 		Point bL = new Point(parent.getX(), parent.getY() + parent.getHeight());
 		Point bR = new Point(parent.getX() + parent.getWidth(), parent.getY() + parent.getHeight());
-		
+
 		Point dis1 = new Point(tL.x - bR.x, tL.y - bR.y);
 		Point dis2 = new Point(tR.x - bL.x, tR.y - bL.y);
-		
-		switch(whichPort()) {
+
+		switch (whichPort()) {
 		case 0: // left
-			return ((p.getX() - tL.getX()) / dis1.getX() > (p.getY() - tL.getY()) / dis1.getY()) && 
-					((p.getX() - tR.getX()) / dis2.getX() < (p.getY() - tR.getY()) / dis2.getY());
+			return ((p.getX() - tL.getX()) / dis1.getX() > (p.getY() - tL.getY()) / dis1.getY())
+					&& ((p.getX() - tR.getX()) / dis2.getX() < (p.getY() - tR.getY()) / dis2.getY());
 		case 1: // top
-			return ((p.getX() - tL.getX()) / dis1.getX() < (p.getY() - tL.getY()) / dis1.getY()) && 
-					((p.getX() - tR.getX()) / dis2.getX() < (p.getY() - tR.getY()) / dis2.getY());
+			return ((p.getX() - tL.getX()) / dis1.getX() < (p.getY() - tL.getY()) / dis1.getY())
+					&& ((p.getX() - tR.getX()) / dis2.getX() < (p.getY() - tR.getY()) / dis2.getY());
 		case 2: // right
-			return ((p.getX() - tL.getX()) / dis1.getX() < (p.getY() - tL.getY()) / dis1.getY()) && 
-					((p.getX() - tR.getX()) / dis2.getX() > (p.getY() - tR.getY()) / dis2.getY());
+			return ((p.getX() - tL.getX()) / dis1.getX() < (p.getY() - tL.getY()) / dis1.getY())
+					&& ((p.getX() - tR.getX()) / dis2.getX() > (p.getY() - tR.getY()) / dis2.getY());
 		case 3: // bottom
-			return ((p.getX() - tL.getX()) / dis1.getX() > (p.getY() - tL.getY()) / dis1.getY()) && 
-					((p.getX() - tR.getX()) / dis2.getX() > (p.getY() - tR.getY()) / dis2.getY());
+			return ((p.getX() - tL.getX()) / dis1.getX() > (p.getY() - tL.getY()) / dis1.getY())
+					&& ((p.getX() - tR.getX()) / dis2.getX() > (p.getY() - tR.getY()) / dis2.getY());
 		}
 		return false;
 	}
