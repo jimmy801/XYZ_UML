@@ -73,18 +73,6 @@ public class Port extends JComponent {
 	 * Point in the part(left, top, right, bottom) of parent is same as position of
 	 * this port.
 	 * 
-	 * <br>
-	 * ----------<br>
-	 * |\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/|<br>
-	 * |&nbsp;&nbsp;\&nbsp;&nbsp;&nbsp;T&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;|<br>
-	 * |&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br>
-	 * |&nbsp;L&nbsp;&nbsp;&nbsp;\/&nbsp;&nbsp;&nbsp;&nbsp;R|<br>
-	 * |&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;/\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br>
-	 * |&nbsp;&nbsp;&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br>
-	 * |&nbsp;&nbsp;/&nbsp;&nbsp;&nbsp;B&nbsp;&nbsp;&nbsp;\&nbsp;&nbsp;|<br>
-	 * |/&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\|<br>
-	 * ----------<br>
-	 * 
 	 * @param p - the point must be detected
 	 * @return true if position of port is same as the part of parent.
 	 * 
@@ -94,27 +82,37 @@ public class Port extends JComponent {
 		if (!parent.contains(p)) {
 			return false;
 		}
+
+		// top-left point of parent
 		Point tL = new Point(parent.getX(), parent.getY());
+		// top-right point of parent
 		Point tR = new Point(parent.getX() + parent.getWidth(), parent.getY());
+		// bottom-left point of parent
 		Point bL = new Point(parent.getX(), parent.getY() + parent.getHeight());
+		// bottom-right point of parent
 		Point bR = new Point(parent.getX() + parent.getWidth(), parent.getY() + parent.getHeight());
 
-		Point dis1 = new Point(tL.x - bR.x, tL.y - bR.y);
-		Point dis2 = new Point(tR.x - bL.x, tR.y - bL.y);
+		// delta of 2 points on lines
+		Point lineDelta1 = new Point(tL.x - bR.x, tL.y - bR.y);
+		Point lineDelta2 = new Point(tR.x - bL.x, tR.y - bL.y);
+
+		// delta of check point and 1 of point on lines
+		Point pointDelta1 = new Point(p.x - tL.x, p.y - tL.y);
+		Point pointDelta2 = new Point(p.x - tR.x, p.y - tR.y);
 
 		switch (whichPort()) {
 		case 0: // left
-			return ((p.getX() - tL.getX()) / dis1.getX() > (p.getY() - tL.getY()) / dis1.getY())
-					&& ((p.getX() - tR.getX()) / dis2.getX() < (p.getY() - tR.getY()) / dis2.getY());
+			return (pointDelta1.x * lineDelta1.y > pointDelta1.y * lineDelta1.x)
+					&& (pointDelta2.x * lineDelta2.y > pointDelta2.y * lineDelta2.x);
 		case 1: // top
-			return ((p.getX() - tL.getX()) / dis1.getX() < (p.getY() - tL.getY()) / dis1.getY())
-					&& ((p.getX() - tR.getX()) / dis2.getX() < (p.getY() - tR.getY()) / dis2.getY());
+			return (pointDelta1.x * lineDelta1.y < pointDelta1.y * lineDelta1.x)
+					&& (pointDelta2.x * lineDelta2.y > pointDelta2.y * lineDelta2.x);
 		case 2: // right
-			return ((p.getX() - tL.getX()) / dis1.getX() < (p.getY() - tL.getY()) / dis1.getY())
-					&& ((p.getX() - tR.getX()) / dis2.getX() > (p.getY() - tR.getY()) / dis2.getY());
+			return (pointDelta1.x * lineDelta1.y < pointDelta1.y * lineDelta1.x)
+					&& (pointDelta2.x * lineDelta2.y < pointDelta2.y * lineDelta2.x);
 		case 3: // bottom
-			return ((p.getX() - tL.getX()) / dis1.getX() > (p.getY() - tL.getY()) / dis1.getY())
-					&& ((p.getX() - tR.getX()) / dis2.getX() > (p.getY() - tR.getY()) / dis2.getY());
+			return (pointDelta1.x * lineDelta1.y > pointDelta1.y * lineDelta1.x)
+					&& (pointDelta2.x * lineDelta2.y < pointDelta2.y * lineDelta2.x);
 		}
 		return false;
 	}

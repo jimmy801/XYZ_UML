@@ -165,6 +165,22 @@ public class BasicObject extends JComponent {
 			isTop = i == 1 ? 1 : 0;
 			ports.get(i).setLocation(pt.x + ((dim.width * (isLeft ^ 1)) >> (i & 1)) - (Port.width * isLeft),
 					pt.y + ((dim.height * (isTop ^ 1)) >> (i & 1 ^ 1)) - (Port.height * isTop));
+
+			// same as the following code:
+//			switch (i) {
+//			case 0: // top
+//				ports.get(i).setLocation(new Point(pt.x + dim.width / 2, pt.y - Port.height));
+//				break;
+//			case 1: // left
+//				ports.get(i).setLocation(new Point(pt.x - Port.width, pt.y + dim.height / 2));
+//				break;
+//			case 2: // right
+//				ports.get(i).setLocation(new Point(pt.x + dim.width, pt.y + dim.height / 2));
+//				break;
+//			case 3: // bottom
+//				ports.get(i).setLocation(new Point(pt.x + dim.width / 2, pt.y + dim.height));
+//				break;
+//			}
 		}
 	}
 
