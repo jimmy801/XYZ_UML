@@ -59,11 +59,44 @@ public class Port extends JComponent {
 		color = Color.BLACK;
 		this.setBounds(x, y, width, height);
 	}
+	
+	private int whichPort() {
+		return parent.ports.indexOf(this);
+	}
+	
+	private boolean parentContain(Point p) {
+		if(!parent.contains(p)) {
+			return false;
+		}
+		Point tL = new Point(parent.getX(), parent.getY());
+		Point tR = new Point(parent.getX() + parent.getWidth(), parent.getY());
+		Point bL = new Point(parent.getX(), parent.getY() + parent.getHeight());
+		Point bR = new Point(parent.getX() + parent.getWidth(), parent.getY() + parent.getHeight());
+		
+		Point dis1 = new Point(tL.x - bR.x, tL.y - bR.y);
+		Point dis2 = new Point(tR.x - bL.x, tR.y - bL.y);
+		
+		switch(whichPort()) {
+		case 0: // left
+			return ((p.getX() - tL.getX()) / dis1.getX() > (p.getY() - tL.getY()) / dis1.getY()) && 
+					((p.getX() - tR.getX()) / dis2.getX() < (p.getY() - tR.getY()) / dis2.getY());
+		case 1: // top
+			return ((p.getX() - tL.getX()) / dis1.getX() < (p.getY() - tL.getY()) / dis1.getY()) && 
+					((p.getX() - tR.getX()) / dis2.getX() < (p.getY() - tR.getY()) / dis2.getY());
+		case 2: // right
+			return ((p.getX() - tL.getX()) / dis1.getX() < (p.getY() - tL.getY()) / dis1.getY()) && 
+					((p.getX() - tR.getX()) / dis2.getX() > (p.getY() - tR.getY()) / dis2.getY());
+		case 3: // bottom
+			return ((p.getX() - tL.getX()) / dis1.getX() > (p.getY() - tL.getY()) / dis1.getY()) && 
+					((p.getX() - tR.getX()) / dis2.getX() > (p.getY() - tR.getY()) / dis2.getY());
+		}
+		return false;
+	}
 
 	@Override
 	public boolean contains(Point p) {
-		return (p.x > this.getX()) && (p.y > this.getY()) && (p.x < this.getX() + this.getWidth())
-				&& (p.y < this.getY() + this.getHeight());
+		return ((p.x > this.getX()) && (p.y > this.getY()) && (p.x < this.getX() + this.getWidth())
+				&& (p.y < this.getY() + this.getHeight())) || parentContain(p);
 	}
 
 	@Override
