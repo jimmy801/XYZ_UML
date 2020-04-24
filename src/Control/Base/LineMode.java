@@ -61,6 +61,7 @@ public class LineMode extends Mode {
 			if (p.contains(press)) {
 				pressObj = p.getParent();
 				pressP = p;
+				break;
 			}
 		}
 	}
@@ -72,7 +73,7 @@ public class LineMode extends Mode {
 
 		// make ports visible to origin state
 		for (Port p : canvas.ports) {
-			if (p.contains(release)) {
+			if (p.contains(release) && releaseP == null) {
 				releaseObj = p.getParent();
 				releaseP = p;
 			}

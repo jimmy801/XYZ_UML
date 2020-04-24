@@ -224,51 +224,24 @@ public class Canvas extends JPanel {
 
 	/**
 	 * Set z-order of children(like groups and other objects) of a {@link Group}
-	 * component on canvas
+	 * component on canvas.
 	 * 
 	 * Use recursive to check whether parent group is selected.
 	 * 
 	 * @param groupZ - start depth of group
 	 * @param group  - the unset z-order group
-	 * @return group is selected or not
 	 */
-	public int setGroupZOrder(int groupZ, Group group) {
-		for (BasicObject obj : group.getChildren()) {
-			setComponentZOrder(obj, groupZ + 1); // children must deeper than group
+	public void setGroupZOrder(int groupZ, Group group) {
+		for (int i = group.getChildren().size() - 1; i >= 0; --i) { // reverse move to front, make sure z-order wouldn't
+																	// be reversed
+			BasicObject obj = group.getChildren().get(i);
+			if (groups.contains(obj)) { // if obj is a Group
+				setGroupZOrder(0, groups.get(groups.indexOf(obj)));
+			}
+			setComponentZOrder(obj, groupZ);
 			setObjZOrder(obj);
-			for (Group g : groups) { // if obj is a Group
-				if (obj == g) {
-					setGroupZOrder(groupZ + 1, g);
-					break;
-				}
-			}
-
-			groupZ += getChildrenTotal(obj);
 		}
-		return groupZ;
-	}
-
-	/**
-	 * Calculate number of obj and obj's children by recursive
-	 * 
-	 * @param obj - calculated object
-	 * @return number of obj's children
-	 */
-	public int getChildrenTotal(BasicObject obj) {
-		int total = 0;
-		for (Group g : groups) { // if obj is a Group
-			if (obj == g) {
-				for (BasicObject child : g.getChildren()) {
-					total += getChildrenTotal(child);
-				}
-				break;
-			}
-		}
-		for (Port port : obj.ports) {
-			total += port.lines.size() + 1; // lines and ports
-		}
-		total += 1; // self object
-		return total;
+		setComponentZOrder(group, groupZ); // children must deeper than group
 	}
 
 	/**
@@ -286,17 +259,15 @@ public class Canvas extends JPanel {
 				setObjZOrder(obj); // move its ports and lines
 
 				// if obj is a Group, all of its children also need to move to front
-				for (Group group : groups) {
-					if (obj == group) {
-						setGroupZOrder(0, group);
-						break; // at most one possible
-					}
+				if (groups.contains(obj)) {
+					setGroupZOrder(0, groups.get(groups.indexOf(obj)));
 				}
 			}
 		}
 
-		if (unsort) { // sort objs and groups vector by z-order
+		if (unsort) { // sort objs, ports and groups vector by z-order
 			objs.sort(zOrderCmp);
+			ports.sort(zOrderCmp);
 			groups.sort(zOrderCmp);
 		}
 		this.repaint();
