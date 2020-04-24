@@ -235,8 +235,9 @@ public class Canvas extends JPanel {
 		for (int i = group.getChildren().size() - 1; i >= 0; --i) { // reverse move to front, make sure z-order wouldn't
 																	// be reversed
 			BasicObject obj = group.getChildren().get(i);
-			if (groups.contains(obj)) { // if obj is a Group
-				setGroupZOrder(0, groups.get(groups.indexOf(obj)));
+			int idx = groups.indexOf(obj);
+			if (idx >= 0) { // if obj is a Group
+				setGroupZOrder(0, groups.get(idx));
 			}
 			setComponentZOrder(obj, groupZ);
 			setObjZOrder(obj);
@@ -259,8 +260,9 @@ public class Canvas extends JPanel {
 				setObjZOrder(obj); // move its ports and lines
 
 				// if obj is a Group, all of its children also need to move to front
-				if (groups.contains(obj)) {
-					setGroupZOrder(0, groups.get(groups.indexOf(obj)));
+				int idx = groups.indexOf(obj);
+				if (idx >= 0) {
+					setGroupZOrder(0, groups.get(idx));
 				}
 			}
 		}
