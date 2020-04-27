@@ -57,10 +57,10 @@ public class SelectMode extends Mode {
 			if (!canvas.objs.contains(com) || !com.isSelected()) { // components are grouped or not selected than break
 				break;
 			}
-			if (com.contains(e.getPoint())) { // if one of last selected object contain press point
+			if (com.contains(press)) { // if one of last selected object contain press point
 				inSelect = true; // DO NOT break because we have to set all relative position
 			}
-			selectedObjs.put(com, new Point(com.getX() - e.getX(), com.getY() - e.getY())); // set all relative position
+			selectedObjs.put(com, new Point(com.getX() - press.x, com.getY() - press.y)); // set all relative position
 		}
 		if (!inSelect) { // if not press on last selected object than clear
 			selectedObjs.clear();
@@ -71,7 +71,7 @@ public class SelectMode extends Mode {
 			if (obj.contains(press) && !inSelect && !pressOnObj) {
 				pressOnObj = true;
 				obj.setSelected(true);
-				selectedObjs.put(obj, new Point(obj.getX() - e.getX(), obj.getY() - e.getY()));
+				selectedObjs.put(obj, new Point(obj.getX() - press.x, obj.getY() - press.y));
 			} else {
 				obj.setSelected(selectedObjs.containsKey(obj));
 			}
@@ -81,7 +81,7 @@ public class SelectMode extends Mode {
 		canvas.resetDepth();
 
 		if (!pressOnObj && !inSelect) { // draw selected rectangle
-			sr.setLocation(e.getPoint());
+			sr.setLocation(press);
 			canvas.add(sr, 0);
 		} else { // press on object, maybe dragging
 			pressOnObj = true;
@@ -111,15 +111,16 @@ public class SelectMode extends Mode {
 	@Override
 	public void mouseDragged(MouseEvent e) {
 		super.mouseDragged(e);
+		Point dragPoint = e.getPoint();
 		if (pressOnObj) { // move components
 			for (Entry<BasicObject, Point> sel : selectedObjs.entrySet()) {
 				BasicObject com = sel.getKey();
 				Point offset = sel.getValue();
-				com.setLocation(e.getX() + offset.x, e.getY() + offset.y);
+				com.setLocation(dragPoint.x + offset.x, dragPoint.y + offset.y);
 			}
 		} else { // selected by selected rectangle
-			sr.setSize(Math.abs(e.getPoint().x - press.x), Math.abs(e.getPoint().y - press.y));
-			sr.setLocation(Math.min(e.getPoint().x, press.x), Math.min(e.getPoint().y, press.y));
+			sr.setBounds(Math.min(dragPoint.x, press.x), Math.min(dragPoint.y, press.y),
+					Math.abs(dragPoint.x - press.x), Math.abs(dragPoint.y - press.y));
 		}
 		canvas.repaint();
 	}

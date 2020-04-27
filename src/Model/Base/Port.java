@@ -113,8 +113,9 @@ public class Port extends JComponent {
 		case 3: // bottom
 			return (pointDelta1.x * lineDelta1.y > pointDelta1.y * lineDelta1.x)
 					&& (pointDelta2.x * lineDelta2.y < pointDelta2.y * lineDelta2.x);
+		default:
+			return false;
 		}
-		return false;
 	}
 
 	@Override

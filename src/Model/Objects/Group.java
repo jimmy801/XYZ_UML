@@ -77,8 +77,9 @@ public class Group extends BasicObject {
 	public void setLocation(int x, int y) {
 		int Xoffset = x - p.x;
 		int Yoffset = y - p.y;
-		for (BasicObject com : children)
+		for (BasicObject com : children) {
 			com.setLocation(com.getX() + Xoffset, com.getY() + Yoffset);
+		}
 		this.p = new Point(x, y);
 		setBounds(x, y, dim.width, dim.height);
 		repaint();
