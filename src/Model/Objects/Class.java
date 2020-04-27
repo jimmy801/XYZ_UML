@@ -70,7 +70,7 @@ public class Class extends BasicObject {
 	public void paintBorder(Graphics g) {
 		super.paintBorder(g);
 		Graphics2D g2d = (Graphics2D) g;
-		g2d.setColor(Color.MAGENTA);
+		g2d.setColor(selected? Color.MAGENTA : Color.BLACK);
 		g2d.setStroke(new BasicStroke(2));
 		g2d.drawRect(0, 0, getWidth(), getHeight());
 	}

@@ -62,7 +62,7 @@ public class UseCase extends BasicObject {
 	@Override
 	public void paintBorder(Graphics g) {
 		super.paintBorder(g);
-		g.setColor(Color.MAGENTA);
+		g.setColor(selected? Color.MAGENTA : Color.BLACK);
 		g.drawOval(0, 0, getWidth(), getHeight());
 	}
 }
