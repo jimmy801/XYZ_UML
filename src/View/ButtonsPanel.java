@@ -37,13 +37,15 @@ public class ButtonsPanel extends JPanel {
 		setLayout(new GridLayout(6, 0));
 		Color initColor = new Color(153, 153, 204);
 		Color focusColor = new Color(157, 183, 183);
-		Font btnFont = new Font("Arial", Font.BOLD, 20);
+		Font btnFont = new Font("Arial", Font.BOLD, 16);
 		btns = new Vector<JButton>();
 		for (MODE m : MODE.values()) {
-			JButton btn = new JButton(m.getTitle());
+			JButton btn = new JButton();
+			btn.setToolTipText(m.getTitle());
 			btn.setFont(btnFont);
 			btn.setForeground(Color.WHITE);
 			btn.setBackground(initColor);
+			btn.setIcon(new ObjectIcon(m));
 			btn.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {

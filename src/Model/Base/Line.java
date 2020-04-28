@@ -21,15 +21,15 @@ public class Line extends JComponent {
 	/**
 	 * Length of line arrow
 	 */
-	protected static int ARROW_LEN;
+	protected static int ARROW_LEN = 15;
 	/**
 	 * Distance of line arrow vertex on line
 	 */
-	protected static int CROSS_LEN;
+	protected static int CROSS_LEN = 12;
 	/**
 	 * Distance of line and arrow tail
 	 */
-	protected static int NORMAL_LEN;
+	protected static int NORMAL_LEN = 9;
 
 	public Line() {
 	}
@@ -75,5 +75,32 @@ public class Line extends JComponent {
 		// 3, 4, 5 triangle
 		CROSS_LEN = Math.round(ARROW_LEN / 5 * 4);
 		NORMAL_LEN = Math.round(ARROW_LEN / 5 * 3);
+	}
+
+	/**
+	 * Get arrow length of lines
+	 * 
+	 * @return arrow length of lines
+	 */
+	public static int getArrowLen() {
+		return ARROW_LEN;
+	}
+
+	/**
+	 * Get distance of line arrow vertex on line
+	 * 
+	 * @return distance of line arrow vertex on line
+	 */
+	public static int getCrossLen() {
+		return CROSS_LEN;
+	}
+
+	/**
+	 * Get distance of line and arrow tail
+	 * 
+	 * @return distance of line and arrow tail
+	 */
+	public static int getNormalLen() {
+		return NORMAL_LEN;
 	}
 }

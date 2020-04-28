@@ -1,13 +1,11 @@
 package Model.Objects;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Point;
 
 import Model.Base.BasicObject;
+import Utils.PaintMethods;
 
 /**
  * Class object component
@@ -20,11 +18,15 @@ public class Class extends BasicObject {
 	/**
 	 * Width of this component
 	 */
-	private final static int width = 100;
+	public final static int width = 100;
 	/**
 	 * Height of this component
 	 */
-	private final static int height = 90;
+	public final static int height = 90;
+	/**
+	 * Size of border
+	 */
+	public final static int border = 2;
 
 	/**
 	 * Initial by top-left point and name of component.
@@ -52,26 +54,15 @@ public class Class extends BasicObject {
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		g.setColor(Color.LIGHT_GRAY);
-		g.fillRect(0, 0, getWidth(), getHeight());
-
-		int offset = getHeight() / 3;
-		g.setColor(Color.BLACK);
-		g.drawLine(0, offset, getWidth(), offset);
-		g.drawLine(0, offset * 2, getWidth(), offset * 2);
-
 		Dimension textSize = getTextSize();
-		int textW = textSize.width, textH = textSize.height;
-		g.setColor(Color.BLACK);
-		g.drawString(this.getName(), getWidth() / 2 - textW / 2, getHeight() / 3 - textH / 2);
+		PaintMethods.paintClass(g, border, border, this.getWidth() - 2 * border, this.getHeight() - 2 * border,
+				this.getName(), textSize.width, textSize.height);
 	}
 
 	@Override
 	public void paintBorder(Graphics g) {
 		super.paintBorder(g);
-		Graphics2D g2d = (Graphics2D) g;
-		g2d.setColor(selected? Color.MAGENTA : Color.BLACK);
-		g2d.setStroke(new BasicStroke(2));
-		g2d.drawRect(0, 0, getWidth(), getHeight());
+		PaintMethods.paintClassBoard(g, border, border, this.getWidth() - 2 * border, this.getHeight() - 2 * border,
+				border);
 	}
 }
