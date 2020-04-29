@@ -1,4 +1,5 @@
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 
 import javax.swing.JFrame;
 
@@ -30,6 +31,7 @@ public class UML extends JFrame {
 	public UML() {
 		initComponents();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setMinimumSize(new Dimension(500, 640));
 		initCanvas();
 		initMenuBar();
 		initButtons();

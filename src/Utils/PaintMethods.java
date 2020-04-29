@@ -281,7 +281,7 @@ public class PaintMethods {
 		Graphics2D g2d = (Graphics2D) g;
 		g2d.setColor(selected ? Color.MAGENTA : Color.BLACK);
 		g2d.setStroke(new BasicStroke(border));
-		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON); // make border smooth
 		g2d.drawOval(x, y, w, h);
 	}
 

@@ -7,6 +7,7 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Point;
+import java.io.File;
 
 import javax.imageio.ImageIO;
 import javax.swing.Icon;
@@ -36,7 +37,7 @@ public class ObjectIcon implements Icon {
 
 	@Override
 	public int getIconWidth() {
-		return 120;
+		return 180;
 	}
 
 	@Override
@@ -55,11 +56,13 @@ public class ObjectIcon implements Icon {
 			w = 50;
 			h = 50;
 			try {
-				image = ImageIO.read(getClass().getResource("/cursor.png"));
+				File imgFile = new File("resources/cursor.png");
+				image = ImageIO.read(imgFile);
 			} catch (Exception ex) {
 				System.out.println("No cursor.png!!");
 			}
-			g.drawImage(image, (cW - w) / 2, (cH - h) / 2, w, h, null);
+			int imgX = (cW - w) / 2, imgY = (cH - h) / 2;
+			g.drawImage(image, imgX, imgY, w, h, null);
 			break;
 		case ASSOCIATION:
 			PaintMethods.paintAssociationLine(g, new Point(x, cH / 2), new Point(cW - x, cH / 2), Line.getCrossLen(),
