@@ -78,7 +78,7 @@ public class Port extends JComponent {
 	 * 
 	 * @see {@link #whichPort()}
 	 */
-	private boolean parentContain(Point p) {
+	public boolean parentContain(Point p) {
 		if (!parent.contains(p)) {
 			return false;
 		}
@@ -117,11 +117,21 @@ public class Port extends JComponent {
 			return false;
 		}
 	}
+	
+	/**
+	 * Point is in port or not.
+	 * 
+	 * @param p - the point must be detected
+	 * @return true if the point is in port.
+	 */
+	public boolean portContain(Point p) {
+		return ((p.x > this.getX()) && (p.y > this.getY()) && (p.x < this.getX() + this.getWidth())
+				&& (p.y < this.getY() + this.getHeight()));
+	}
 
 	@Override
 	public boolean contains(Point p) {
-		return ((p.x > this.getX()) && (p.y > this.getY()) && (p.x < this.getX() + this.getWidth())
-				&& (p.y < this.getY() + this.getHeight())) || parentContain(p);
+		return portContain(p) || parentContain(p);
 	}
 
 	@Override

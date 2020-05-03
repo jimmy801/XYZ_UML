@@ -93,6 +93,7 @@ public class Group extends BasicObject {
 		g2d.setColor(selected ? new Color(72, 72, 145) : new Color(77, 255, 255));
 		g2d.setStroke(dashed);
 		g2d.drawRect(0, 0, this.getWidth(), this.getHeight());
+		g2d.dispose();
 	}
 
 	/**

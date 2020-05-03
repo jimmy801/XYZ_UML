@@ -39,11 +39,12 @@ public class SelectRectangle extends JComponent {
 	@Override
 	public void paint(Graphics g) {
 		super.paintComponent(g);
-		Graphics2D g2 = (Graphics2D) g;
+		Graphics2D g2d = (Graphics2D) g;
 		Stroke dashed = new BasicStroke(3, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[] { 9 }, 0);
 
-		g2.setPaint(Color.GRAY);
-		g2.setStroke(dashed);
-		g2.drawRect(0, 0, this.getWidth(), this.getHeight());
+		g2d.setPaint(Color.GRAY);
+		g2d.setStroke(dashed);
+		g2d.drawRect(0, 0, this.getWidth(), this.getHeight());
+		g2d.dispose();
 	}
 }
