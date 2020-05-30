@@ -117,7 +117,7 @@ public class Port extends JComponent {
 			return false;
 		}
 	}
-	
+
 	/**
 	 * Point is in port or not.
 	 * 

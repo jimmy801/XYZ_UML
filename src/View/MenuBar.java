@@ -10,7 +10,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
-import Model.Base.BasicObject;
+import Model.Base.Shape;
 import Model.Objects.Group;
 
 /**
@@ -100,7 +100,7 @@ public class MenuBar extends JMenuBar {
 		rename.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				BasicObject selectedObj = canvas.getSelectedObjs()[0];
+				Shape selectedObj = canvas.getSelectedObjs()[0];
 				Object result = JOptionPane.showInputDialog(new JFrame(), "Enter new name:", selectedObj.getName());
 				if (result != null && !result.toString().isEmpty())
 					selectedObj.setName(result.toString());
@@ -112,9 +112,9 @@ public class MenuBar extends JMenuBar {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				Group group = new Group();
-				Iterator<BasicObject> it = canvas.objs.iterator();
+				Iterator<Shape> it = canvas.objs.iterator();
 				while (it.hasNext()) {
-					BasicObject obj = it.next();
+					Shape obj = it.next();
 					if (obj.isSelected()) {
 						group.addChild(obj);
 						obj.setSelected(false);

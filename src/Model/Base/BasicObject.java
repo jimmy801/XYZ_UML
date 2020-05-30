@@ -6,24 +6,18 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.util.Vector;
 
-import javax.swing.JComponent;
-
 /**
  * Base of all object components
  * 
  * @author Jimmy801
  *
- * @see {@link JComponent}
+ * @see {@link Shape}
  */
-public class BasicObject extends JComponent {
+public class BasicObject extends Shape {
 	/**
 	 * Ports of connection lines
 	 */
 	public Vector<Port> ports;
-	/**
-	 * Check component is selected by user
-	 */
-	protected boolean selected;
 	/**
 	 * The number of ports
 	 */
@@ -208,23 +202,10 @@ public class BasicObject extends JComponent {
 		}
 	}
 
-	/**
-	 * Set component is selected by user
-	 * 
-	 * @param selected - user is selected this component or not
-	 */
+	@Override
 	public void setSelected(boolean selected) {
-		this.selected = selected;
+		super.setSelected(selected);
 		setPortsVisible(selected);
-	}
-
-	/**
-	 * Get this component is selected by user or not
-	 * 
-	 * @return this component is selected by user or not
-	 */
-	public boolean isSelected() {
-		return selected;
 	}
 
 	/**

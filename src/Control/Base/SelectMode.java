@@ -6,8 +6,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import Model.Base.BasicObject;
 import Model.Base.SelectRectangle;
+import Model.Base.Shape;
 
 /**
  * Select Control, control select event
@@ -32,7 +32,7 @@ public class SelectMode extends Mode {
 	/**
 	 * Last selected objects(For {@link #sr})
 	 */
-	private Map<BasicObject, Point> selectedObjs;
+	private Map<Shape, Point> selectedObjs;
 	/**
 	 * Check mouse pressed on an object
 	 */
@@ -52,8 +52,8 @@ public class SelectMode extends Mode {
 		press.setLocation(e.getPoint());
 		boolean inSelect = false; // check mouse press in one of selected object
 		// check last selected object
-		for (Entry<BasicObject, Point> sel : selectedObjs.entrySet()) {
-			BasicObject com = sel.getKey();
+		for (Entry<Shape, Point> sel : selectedObjs.entrySet()) {
+			Shape com = sel.getKey();
 			if (!canvas.objs.contains(com) || !com.isSelected()) { // components are grouped or not selected than break
 				break;
 			}
@@ -67,7 +67,7 @@ public class SelectMode extends Mode {
 		}
 
 		// set selected and save relative position
-		for (BasicObject obj : canvas.objs) {
+		for (Shape obj : canvas.objs) {
 			if (obj.contains(press) && !inSelect && !pressOnObj) {
 				pressOnObj = true;
 				obj.setSelected(true);
@@ -93,7 +93,7 @@ public class SelectMode extends Mode {
 		super.mouseReleased(e);
 		release.setLocation(e.getPoint());
 		if (!pressOnObj) { // set state of objects in selected rectangle to "selected"
-			for (BasicObject obj : canvas.objs) {
+			for (Shape obj : canvas.objs) {
 				if (sr.contains(obj.getLocation())) {
 					obj.setSelected(true);
 					selectedObjs.put(obj, new Point());
@@ -113,8 +113,8 @@ public class SelectMode extends Mode {
 		super.mouseDragged(e);
 		Point dragPoint = e.getPoint();
 		if (pressOnObj) { // move components
-			for (Entry<BasicObject, Point> sel : selectedObjs.entrySet()) {
-				BasicObject com = sel.getKey();
+			for (Entry<Shape, Point> sel : selectedObjs.entrySet()) {
+				Shape com = sel.getKey();
 				Point offset = sel.getValue();
 				com.setLocation(dragPoint.x + offset.x, dragPoint.y + offset.y);
 			}

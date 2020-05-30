@@ -2,7 +2,7 @@ package Control.Base;
 
 import java.awt.event.MouseEvent;
 
-import Model.Base.BasicObject;
+import Model.Base.Shape;
 
 /**
  * Base of all object controls
@@ -20,7 +20,7 @@ public class ObjectMode extends Mode {
 	public void mouseClicked(MouseEvent e) {
 		super.mouseClicked(e);
 		// set other object unselected before add new object
-		for (BasicObject obj : canvas.objs) {
+		for (Shape obj : canvas.objs) {
 			obj.setSelected(false);
 		}
 	}

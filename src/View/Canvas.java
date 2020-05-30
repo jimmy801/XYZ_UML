@@ -18,6 +18,7 @@ import Control.ObjectModes.UseCaseMode;
 import Model.Base.BasicObject;
 import Model.Base.Line;
 import Model.Base.Port;
+import Model.Base.Shape;
 import Model.Objects.Group;
 import Utils.MODE;
 
@@ -48,7 +49,7 @@ public class Canvas extends JPanel {
 	/**
 	 * All components of canvas
 	 */
-	public Vector<BasicObject> objs;
+	public Vector<Shape> objs;
 	/**
 	 * All ports of canvas
 	 */
@@ -73,7 +74,7 @@ public class Canvas extends JPanel {
 	 */
 	public Canvas() {
 		this.setLayout(null); // make objects wouldn't locate to wrong position.
-		objs = new Vector<BasicObject>();
+		objs = new Vector<Shape>();
 		ports = new Vector<Port>();
 		groups = new Vector<Group>();
 		modes = new Vector<Mode>();
@@ -163,12 +164,12 @@ public class Canvas extends JPanel {
 	}
 
 	/**
-	 * Get arrays of selected {@link BasicObject} components on canvas
+	 * Get arrays of selected {@link Shape} components on canvas
 	 * 
 	 * @return array of selected components
 	 */
-	public BasicObject[] getSelectedObjs() {
-		return objs.stream().filter(e -> e.isSelected()).toArray(BasicObject[]::new);
+	public Shape[] getSelectedObjs() {
+		return objs.stream().filter(e -> e.isSelected()).toArray(Shape[]::new);
 	}
 
 	/**
@@ -234,13 +235,15 @@ public class Canvas extends JPanel {
 	public void setGroupZOrder(int groupZ, Group group) {
 		for (int i = group.getChildren().size() - 1; i >= 0; --i) { // reverse move to front, make sure z-order wouldn't
 																	// be reversed
-			BasicObject obj = group.getChildren().get(i);
+			Shape obj = group.getChildren().get(i);
 			int idx = groups.indexOf(obj);
 			if (idx >= 0) { // if obj is a Group
 				setGroupZOrder(0, groups.get(idx));
 			}
 			setComponentZOrder(obj, groupZ);
-			setObjZOrder(obj);
+			if (idx < 0) {
+				setObjZOrder((BasicObject) obj);
+			}
 		}
 		setComponentZOrder(group, groupZ); // children must deeper than group
 	}
@@ -253,16 +256,17 @@ public class Canvas extends JPanel {
 
 		// move selected objs to front
 		for (int i = objs.size() - 1; i >= 0; --i) { // reverse move to front, make sure z-order wouldn't be reversed
-			BasicObject obj = objs.get(i);
+			Shape obj = objs.get(i);
 			if (obj.isSelected()) {
 				unsort = true;
 				setComponentZOrder(obj, 0);
-				setObjZOrder(obj); // move its ports and lines
 
 				// if obj is a Group, all of its children also need to move to front
 				int idx = groups.indexOf(obj);
 				if (idx >= 0) {
 					setGroupZOrder(0, groups.get(idx));
+				} else { // if isn't a Group, move its ports and lines
+					setObjZOrder((BasicObject) obj);
 				}
 			}
 		}

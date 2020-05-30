@@ -9,20 +9,20 @@ import java.awt.Point;
 import java.awt.Stroke;
 import java.util.Vector;
 
-import Model.Base.BasicObject;
+import Model.Base.Shape;
 
 /**
  * Group object component
  * 
  * @author Jimmy801
  *
- * @see {@link BasicObject}
+ * @see {@link Shape}
  */
-public class Group extends BasicObject {
+public class Group extends Shape {
 	/**
 	 * Children of this group
 	 */
-	private Vector<BasicObject> children;
+	private Vector<Shape> children;
 	/**
 	 * Top-left corner of this component
 	 */
@@ -46,8 +46,6 @@ public class Group extends BasicObject {
 		this.p = p;
 		this.dim = dim;
 		children = new Vector<>();
-		this.ports = new Vector<>();
-		setPortNumber(0);
 		this.setSelected(true);
 	}
 
@@ -56,13 +54,11 @@ public class Group extends BasicObject {
 	 * 
 	 * @param components - array of children
 	 * 
-	 * @see {@link BasicObject}
+	 * @see {@link Shape}
 	 */
-	public Group(BasicObject... components) {
+	public Group(Shape... components) {
 		p = new Point(components[0].getLocation());
 		dim = new Dimension(components[0].getSize());
-		this.ports = new Vector<>();
-		setPortNumber(0);
 		children = new Vector<>();
 		addAll(components);
 		this.setSelected(true);
@@ -77,7 +73,7 @@ public class Group extends BasicObject {
 	public void setLocation(int x, int y) {
 		int Xoffset = x - p.x;
 		int Yoffset = y - p.y;
-		for (BasicObject com : children) {
+		for (Shape com : children) {
 			com.setLocation(com.getX() + Xoffset, com.getY() + Yoffset);
 		}
 		this.p = new Point(x, y);
@@ -96,15 +92,21 @@ public class Group extends BasicObject {
 		g2d.dispose();
 	}
 
+	@Override
+	public boolean contains(Point p) {
+		return (p.x > this.getX()) && (p.y > this.getY()) && (p.x < this.getX() + this.getWidth())
+				&& (p.y < this.getY() + this.getHeight());
+	}
+
 	/**
 	 * Add children to this group
 	 * 
 	 * @param objs - array new children
 	 * 
-	 * @see {@link BasicObject}
+	 * @see {@link Shape}
 	 */
-	public void addAll(BasicObject... objs) {
-		for (BasicObject obj : objs)
+	public void addAll(Shape... objs) {
+		for (Shape obj : objs)
 			addChild(obj);
 	}
 
@@ -113,10 +115,10 @@ public class Group extends BasicObject {
 	 * 
 	 * @param objs - {@link Vector} array of new children
 	 * 
-	 * @see {@link BasicObject}
+	 * @see {@link Shape}
 	 */
-	public void addAll(Vector<BasicObject> objs) {
-		this.addAll(objs.toArray(new BasicObject[0]));
+	public void addAll(Vector<Shape> objs) {
+		this.addAll(objs.toArray(new Shape[0]));
 	}
 
 	/**
@@ -124,9 +126,9 @@ public class Group extends BasicObject {
 	 * 
 	 * @return children of this group
 	 * 
-	 * @see {@link BasicObject}
+	 * @see {@link Shape}
 	 */
-	public Vector<BasicObject> getChildren() {
+	public Vector<Shape> getChildren() {
 		return this.children;
 	}
 
@@ -136,7 +138,7 @@ public class Group extends BasicObject {
 	 * @param idx - add child position
 	 * @param c   - child component
 	 */
-	public void addChild(int idx, BasicObject c) {
+	public void addChild(int idx, Shape c) {
 		int cLeft = c.getX(); // left position of added child
 		int cTop = c.getY(); // top position of added child
 		int cRight = cLeft + c.getWidth(); // right position of added child
@@ -162,7 +164,7 @@ public class Group extends BasicObject {
 	 * 
 	 * @param c - child component
 	 */
-	public void addChild(BasicObject c) {
+	public void addChild(Shape c) {
 		this.addChild(children.size(), c);
 	}
 }

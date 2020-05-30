@@ -62,7 +62,7 @@ public class Class extends BasicObject {
 	@Override
 	public void paintBorder(Graphics g) {
 		super.paintBorder(g);
-		PaintMethods.paintClassBoard(g, selected, border, border, this.getWidth() - 2 * border, this.getHeight() - 2 * border,
-				border);
+		PaintMethods.paintClassBoard(g, selected, border, border, this.getWidth() - 2 * border,
+				this.getHeight() - 2 * border, border);
 	}
 }
