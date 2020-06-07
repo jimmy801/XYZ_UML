@@ -33,40 +33,10 @@ public class Group extends Shape {
 	private Dimension dim;
 
 	public Group() {
-		this(new Point(), new Dimension());
-	}
-
-	/**
-	 * Initial by top-left point, width, height, and name of component.
-	 * 
-	 * @param p   - top-left corner point of this component
-	 * @param dim - dimension of this component
-	 */
-	public Group(Point p, Dimension dim) {
-		this.p = p;
-		this.dim = dim;
+		this.p = new Point();
+		this.dim = new Dimension();
 		children = new Vector<>();
 		this.setSelected(true);
-	}
-
-	/**
-	 * Initial by children of this group
-	 * 
-	 * @param components - array of children
-	 * 
-	 * @see {@link Shape}
-	 */
-	public Group(Shape... components) {
-		p = new Point(components[0].getLocation());
-		dim = new Dimension(components[0].getSize());
-		children = new Vector<>();
-		addAll(components);
-		this.setSelected(true);
-	}
-
-	@Override
-	public void setLocation(Point p) {
-		this.setLocation(p.x, p.y);
 	}
 
 	@Override
@@ -108,17 +78,6 @@ public class Group extends Shape {
 	public void addAll(Shape... objs) {
 		for (Shape obj : objs)
 			addChild(obj);
-	}
-
-	/**
-	 * Add children to this group
-	 * 
-	 * @param objs - {@link Vector} array of new children
-	 * 
-	 * @see {@link Shape}
-	 */
-	public void addAll(Vector<Shape> objs) {
-		this.addAll(objs.toArray(new Shape[0]));
 	}
 
 	/**

@@ -17,9 +17,6 @@ import javax.swing.JComponent;
  * @see {@link JComponet}
  */
 public class SelectRectangle extends JComponent {
-	public SelectRectangle() {
-		this(new Point());
-	}
 
 	/**
 	 * Initialize component by top-left corner
@@ -35,10 +32,10 @@ public class SelectRectangle extends JComponent {
 		return (p.x > this.getX()) && (p.y > this.getY()) && (p.x < this.getX() + this.getWidth())
 				&& (p.y < this.getY() + this.getHeight());
 	}
-	
+
 	public boolean contains(Shape obj) {
-		return (obj.getX() > this.getX()) && (obj.getY() > this.getY()) && 
-				(obj.getX() + obj.getWidth() < this.getX() + this.getWidth())
+		return (obj.getX() > this.getX()) && (obj.getY() > this.getY())
+				&& (obj.getX() + obj.getWidth() < this.getX() + this.getWidth())
 				&& (obj.getY() + obj.getHeight() < this.getY() + this.getHeight());
 	}
 

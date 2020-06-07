@@ -15,88 +15,13 @@ import java.util.Vector;
  */
 public class BasicObject extends Shape {
 	/**
-	 * Ports of connection lines
-	 */
-	public Vector<Port> ports;
-	/**
 	 * The number of ports
 	 */
 	private int PORT_NUM = 4;
-
-	public BasicObject() {
-	}
-
 	/**
-	 * Initial by top-left point, width, and height.<br>
-	 * Default name is empty
-	 * 
-	 * @param p      - top-left corner point of this component
-	 * @param width  - width of this component
-	 * @param height - height of this component
+	 * Ports of connection lines
 	 */
-	public BasicObject(Point p, int width, int height) {
-		this(p, width, height, "");
-	}
-
-	/**
-	 * Initial by left x, top y, and dimension.<br>
-	 * Default name is empty
-	 * 
-	 * @param x   - left position of this component
-	 * @param y   - top position of this component
-	 * @param dim - dimension of this component
-	 */
-	public BasicObject(int x, int y, Dimension dim) {
-		this(x, y, dim.width, dim.height, "");
-	}
-
-	/**
-	 * Initial by top-left point, and dimension.<br>
-	 * Default name is empty
-	 * 
-	 * @param p   - top-left corner point of this component
-	 * @param dim - dimension of this component
-	 */
-	public BasicObject(Point p, Dimension dim) {
-		this(p, dim, "");
-	}
-
-	/**
-	 * Initial by left x, top y, width, and height.<br>
-	 * Default name is empty
-	 * 
-	 * @param x      - left position of this component
-	 * @param y      - top position of this component
-	 * @param width  - width of this component
-	 * @param height - height of this component
-	 */
-	public BasicObject(int x, int y, int width, int height) {
-		this(x, y, width, height, "");
-	}
-
-	/**
-	 * Initial by top-left point, width, height, and name of component.
-	 * 
-	 * @param p      - top-left corner point of this component
-	 * @param width  - width of this component
-	 * @param height - height of this component
-	 * @param name   - name of this component
-	 */
-	public BasicObject(Point p, int width, int height, String name) {
-		this(p.x, p.y, width, height, name);
-	}
-
-	/**
-	 * Initial by top-left point, width, height, and name of component.
-	 * 
-	 * @param x    - left position of this component
-	 * @param y    - top position of this component
-	 * @param dim  - dimension of this component
-	 * @param name - name of this component
-	 */
-	public BasicObject(int x, int y, Dimension dim, String name) {
-		this(x, y, dim.width, dim.height, name);
-	}
+	public Port ports[];
 
 	/**
 	 * Initial by top-left point, width, height, and name of component.
@@ -106,26 +31,13 @@ public class BasicObject extends Shape {
 	 * @param name - name of this component
 	 */
 	public BasicObject(Point p, Dimension dim, String name) {
-		this(p.x, p.y, dim.width, dim.height, name);
-	}
-
-	/**
-	 * Initial by top-left point, width, height, and name of component.
-	 * 
-	 * @param x      - left position of this component
-	 * @param y      - top position of this component
-	 * @param width  - width of this component
-	 * @param height - height of this component
-	 * @param name   - name of this component
-	 */
-	public BasicObject(int x, int y, int width, int height, String name) {
-		this.ports = new Vector<>();
+		this.ports = new Port[PORT_NUM];
 		for (int i = 0; i < PORT_NUM; ++i) {
-			this.ports.add(new Port(this.getLocation(), this));
+			ports[i] = new Port(this.getLocation(), this);
 		}
 		this.setName(name);
 		this.setSelected(true);
-		this.setBounds(x, y, width, height);
+		this.setBounds(p.x, p.y, dim.width, dim.height);
 	}
 
 	@Override
@@ -157,22 +69,22 @@ public class BasicObject extends Shape {
 		for (int i = 0; i < PORT_NUM; ++i) {
 			isLeft = i == 0 ? 1 : 0;
 			isTop = i == 1 ? 1 : 0;
-			ports.get(i).setLocation(pt.x + ((dim.width * (isLeft ^ 1)) >> (i & 1)) - (Port.width * isLeft),
+			ports[i].setLocation(pt.x + ((dim.width * (isLeft ^ 1)) >> (i & 1)) - (Port.width * isLeft),
 					pt.y + ((dim.height * (isTop ^ 1)) >> (i & 1 ^ 1)) - (Port.height * isTop));
 
 			// same as the following code:
 //			switch (i) {
 //			case 0: // top
-//				ports.get(i).setLocation(new Point(pt.x + dim.width / 2, pt.y - Port.height));
+//				ports[i].setLocation(new Point(pt.x + dim.width / 2, pt.y - Port.height));
 //				break;
 //			case 1: // left
-//				ports.get(i).setLocation(new Point(pt.x - Port.width, pt.y + dim.height / 2));
+//				ports[i].setLocation(new Point(pt.x - Port.width, pt.y + dim.height / 2));
 //				break;
 //			case 2: // right
-//				ports.get(i).setLocation(new Point(pt.x + dim.width, pt.y + dim.height / 2));
+//				ports[i].setLocation(new Point(pt.x + dim.width, pt.y + dim.height / 2));
 //				break;
 //			case 3: // bottom
-//				ports.get(i).setLocation(new Point(pt.x + dim.width / 2, pt.y + dim.height));
+//				ports[i].setLocation(new Point(pt.x + dim.width / 2, pt.y + dim.height));
 //				break;
 //			}
 		}
@@ -186,19 +98,6 @@ public class BasicObject extends Shape {
 	public void setPortsVisible(boolean isVisible) {
 		for (Port port : ports) {
 			port.setVisible(isVisible);
-		}
-	}
-
-	/**
-	 * Clear old ports and set new number of ports
-	 * 
-	 * @param PORT_NUM - new number of ports
-	 */
-	public void setPortNumber(int PORT_NUM) {
-		this.PORT_NUM = PORT_NUM;
-		ports.clear();
-		for (int i = 0; i < PORT_NUM; ++i) {
-			this.ports.add(new Port(this.getLocation(), this));
 		}
 	}
 

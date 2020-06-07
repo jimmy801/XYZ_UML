@@ -40,17 +40,6 @@ public class Class extends BasicObject {
 		super(p, new Dimension(width, height), name);
 	}
 
-	/**
-	 * Initial by name of component.
-	 * 
-	 * @param name - name of component
-	 * 
-	 * @see {@link BasicObject}
-	 */
-	public Class(String name) {
-		this(new Point(), name);
-	}
-
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);

@@ -43,30 +43,23 @@ public class Port extends JComponent {
 	 * @param parent - parent component of this component
 	 */
 	public Port(Point R, BasicObject parent) {
-		this(R.x, R.y, parent);
-	}
-
-	/**
-	 * Initialize port by left, top, and parent component
-	 * 
-	 * @param x      - left position
-	 * @param y      - top position
-	 * @param parent - parent component of this component
-	 */
-	public Port(int x, int y, BasicObject parent) {
 		this.parent = parent;
 		lines = new Vector<Line>();
 		color = Color.BLACK;
-		this.setBounds(x, y, width, height);
+		this.setBounds(R.x, R.y, width, height);
 	}
 
 	/**
 	 * Find this port is which position of parent object
 	 * 
-	 * @return 0 for Left, 1 for Top, 2 for Right, 3 for Bottom
+	 * @return 0 for Left, 1 for Top, 2 for Right, 3 for Bottom, -1 for error
 	 */
 	private int whichPort() {
-		return parent.ports.indexOf(this);
+		for(int i = 0; i < parent.ports.length; ++i) {
+			if(parent.ports[i] == this)
+				return i;
+		}
+		return -1;
 	}
 
 	/**

@@ -31,9 +31,6 @@ public class Line extends JComponent {
 	 */
 	protected static int NORMAL_LEN = 9;
 
-	public Line() {
-	}
-
 	/**
 	 * Initialize by source port and destination port
 	 * 
