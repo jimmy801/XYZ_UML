@@ -35,6 +35,12 @@ public class SelectRectangle extends JComponent {
 		return (p.x > this.getX()) && (p.y > this.getY()) && (p.x < this.getX() + this.getWidth())
 				&& (p.y < this.getY() + this.getHeight());
 	}
+	
+	public boolean contains(Shape obj) {
+		return (obj.getX() > this.getX()) && (obj.getY() > this.getY()) && 
+				(obj.getX() + obj.getWidth() < this.getX() + this.getWidth())
+				&& (obj.getY() + obj.getHeight() < this.getY() + this.getHeight());
+	}
 
 	@Override
 	public void paint(Graphics g) {

@@ -94,7 +94,7 @@ public class SelectMode extends Mode {
 		release.setLocation(e.getPoint());
 		if (!pressOnObj) { // set state of objects in selected rectangle to "selected"
 			for (Shape obj : canvas.objs) {
-				if (sr.contains(obj.getLocation())) {
+				if (sr.contains(obj)) {
 					obj.setSelected(true);
 					selectedObjs.put(obj, new Point());
 				}
