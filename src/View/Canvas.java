@@ -72,7 +72,7 @@ public class Canvas extends JPanel {
 	/**
 	 * Initialize canvas
 	 */
-	public Canvas() {
+	private Canvas() {
 		this.setLayout(null); // make objects wouldn't locate to wrong position.
 		objs = new Vector<Shape>();
 		ports = new Vector<Port>();

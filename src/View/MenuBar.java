@@ -46,7 +46,7 @@ public class MenuBar extends JMenuBar {
 	 */
 	private JMenuItem group, ungroup, clear;
 
-	public MenuBar() {
+	private MenuBar() {
 		init();
 		this.add(fileMenu);
 		this.add(editMenu);

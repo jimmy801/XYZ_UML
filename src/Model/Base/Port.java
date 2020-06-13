@@ -55,8 +55,8 @@ public class Port extends JComponent {
 	 * @return 0 for Left, 1 for Top, 2 for Right, 3 for Bottom, -1 for error
 	 */
 	private int whichPort() {
-		for(int i = 0; i < parent.ports.length; ++i) {
-			if(parent.ports[i] == this)
+		for (int i = 0; i < parent.ports.length; ++i) {
+			if (parent.ports[i] == this)
 				return i;
 		}
 		return -1;

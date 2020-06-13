@@ -4,7 +4,6 @@ import java.awt.Dimension;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Point;
-import java.util.Vector;
 
 /**
  * Base of all object components
