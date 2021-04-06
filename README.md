@@ -1,6 +1,6 @@
 # XYZ UML
-![XYZ_UML_seq_diagram](https://i.imgur.com/gHk4vIS.png)
-Sequence diagram of `XYZ_UML`
+![XYZ_UML_cls_diagram_w_method_key_attr](https://i.imgur.com/gHk4vIS.png)
+Class diagram with methods and key attributes of `XYZ_UML`
 
 ![XYZ_UML_cls_diagram](https://i.imgur.com/7j7aU1W.png)
 Class diagram of `XYM_UML`
