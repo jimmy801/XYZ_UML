@@ -115,28 +115,34 @@ public class Canvas extends JPanel {
 	 * Initial all modes of canvas by {@link MODE}
 	 */
 	private static void initModes() {
-		for (MODE m : MODE.values()) {
-			switch (m) {
-			case SELECT:
-				modes.add(new SelectMode());
-				break;
-			case ASSOCIATION:
-				modes.add(new AssociationMode());
-				break;
-			case GENERALIZATION:
-				modes.add(new GeneralizationMode());
-				break;
-			case COMPOSITION:
-				modes.add(new CompositionMode());
-				break;
-			case CLASS:
-				modes.add(new ClassMode());
-				break;
-			case USECASE:
-				modes.add(new UseCaseMode());
-				break;
-			}
-		}
+		modes.add(new SelectMode());
+		modes.add(new AssociationMode());
+		modes.add(new GeneralizationMode());
+		modes.add(new CompositionMode());
+		modes.add(new ClassMode());
+		modes.add(new UseCaseMode());
+//		for (MODE m : MODE.values()) {
+//			switch (m) {
+//			case SELECT:
+//				modes.add(new SelectMode());
+//				break;
+//			case ASSOCIATION:
+//				modes.add(new AssociationMode());
+//				break;
+//			case GENERALIZATION:
+//				modes.add(new GeneralizationMode());
+//				break;
+//			case COMPOSITION:
+//				modes.add(new CompositionMode());
+//				break;
+//			case CLASS:
+//				modes.add(new ClassMode());
+//				break;
+//			case USECASE:
+//				modes.add(new UseCaseMode());
+//				break;
+//			}
+//		}
 
 	}
 
